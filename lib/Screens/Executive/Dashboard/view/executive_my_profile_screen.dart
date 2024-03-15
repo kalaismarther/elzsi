@@ -1783,6 +1783,7 @@ import 'package:elzsi/Utils/horizontalspace.dart';
 import 'package:elzsi/Utils/navigations.dart';
 import 'package:elzsi/Utils/verticalspace.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -1959,6 +1960,18 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
       }
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Permission Denied')));
+    }
+  }
+
+  //CHOOSE DOB
+  void _chooseDOB() async {
+    final pickedDate = await showDatePicker(
+        context: context, firstDate: DateTime(1900), lastDate: DateTime.now());
+
+    if (pickedDate != null) {
+      setState(() {
+        _dobController.text = DateFormat('dd-MM-yyyy').format(pickedDate);
+      });
     }
   }
 
@@ -2712,10 +2725,21 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                         ),
                                         const VerticalSpace(height: 6),
                                         TextFormField(
+                                          readOnly: true,
+                                          onTap: _chooseDOB,
                                           style: const TextStyle(fontSize: 14),
                                           controller: _dobController,
-                                          decoration: const InputDecoration(
-                                              hintText: 'Enter your DOB'),
+                                          decoration: InputDecoration(
+                                            hintText: 'Enter your DOB',
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(15.0),
+                                              child: Image.asset(
+                                                'assets/images/calendar.png',
+                                                height: 5,
+                                              ),
+                                            ),
+                                          ),
                                           validator: (value) {
                                             if (value
                                                     .toString()
