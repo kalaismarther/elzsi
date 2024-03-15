@@ -1,0 +1,50 @@
+agent_linked_sellers -
+Need seller address/location
+
+---
+
+get_agent_profile -
+need user profile image link
+
+---
+
+agent_get_sellers -
+need seller business logo image link on is_business_logo
+
+---
+
+agent_linked_projects -
+Properties list is empty. But those properties come in recent properties(for leader login)
+
+---
+
+agent_linked_project_details -
+need agent units and status (executive)
+
+---
+
+agent_linked_project_details -
+need customer name and mobile number & agent units and status(leader)
+
+<!-- Provide required visibility configuration for API level 30 and above -->
+
+    <queries>
+    <!-- If your app checks for SMS support -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="sms" />
+        </intent>
+
+   <!-- If your app checks for call support -->
+
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
+
+   <!-- If your application checks for inAppBrowserView launch mode support -->
+
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>

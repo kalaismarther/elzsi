@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1052214880959",
+    "project_id": "elzsicrm",
+    "storage_bucket": "elzsicrm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052214880959:android:95611d1c359260ef0eb40a",
+        "android_client_info": {
+          "package_name": "com.example.elzsi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmWHAJ5JI_-4pnR43b0H5wLJSyE1v6w_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052214880959:android:eb16f45804d6e0f30eb40a",
+        "android_client_info": {
+          "package_name": "com.smart.elzsi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmWHAJ5JI_-4pnR43b0H5wLJSyE1v6w_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
