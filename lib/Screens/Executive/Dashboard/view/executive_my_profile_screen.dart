@@ -1776,6 +1776,7 @@ import 'package:elzsi/Utils/button_loader.dart';
 import 'package:elzsi/Utils/circleshimmer.dart';
 import 'package:elzsi/Utils/common.dart';
 import 'package:elzsi/Utils/regex.dart';
+import 'package:elzsi/Widgets/common_modal.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:elzsi/Utils/colors.dart';
@@ -1821,6 +1822,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   final _scrollController = ScrollController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _mobileController = TextEditingController();
   final _addressController = TextEditingController();
   final _projectsCountController = TextEditingController();
   final _dobController = TextEditingController();
@@ -1831,6 +1833,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
 
   //EXECUTIVE TYPE
   int workingType = 1;
+
+  //ADDRESS INFO
+  Map? selectedPincode;
+  Map? selectedArea;
 
   //FOR PROFILE PICTURE
   String? displayPicture;
@@ -1975,6 +1981,24 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
     }
   }
 
+  String _formatDate(String date) {
+    if (date.isEmpty || date == '') {
+      return '';
+    }
+    DateTime inputDate = DateTime.parse(date);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
+    return formattedDate;
+  }
+
+  String _formatDate1(String date) {
+    if (date.isEmpty || date == '') {
+      return '';
+    }
+    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+    return formattedDate;
+  }
+
   void _addExistingSellerDetails() {
     setState(() {
       existingControllers.add([
@@ -2024,10 +2048,17 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
 
         //DATA - BODY FIELD
         request.fields['user_id'] = userInfo.userId.toString();
+        request.fields['work_position'] = workingType.toString();
         request.fields['name'] = _nameController.text;
         request.fields['email'] = _emailController.text;
+        request.fields['dob'] = _formatDate1(_dobController.text);
+        request.fields['gender'] = _genderController.text;
         request.fields['address'] = _addressController.text;
-        request.fields['mobile'] = profileInfo!['mobile'];
+        request.fields['mobile'] = profileInfo!['mobile'].toString();
+        request.fields['area_id'] = selectedArea!['id'].toString();
+        request.fields['pincode_id'] = selectedPincode!['id'].toString();
+        request.fields['years_of_exp'] =
+            _yearsOfExperienceController.text.toString();
         request.fields['no_of_projects'] = _projectsCountController.text;
 
         for (int info = 0; info < existingControllers.length; info++) {
@@ -2116,17 +2147,32 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
     }
 
     var data = {"user_id": userInfo.userId};
+    print(data);
+    print(userInfo.token);
 
     final result = await Api().getAgentProfile(data, userInfo.token, context);
 
     if (result['status'].toString() == '1') {
       setState(() {
         profileInfo = result['data'];
-        _nameController.text = profileInfo!['name'];
-        _emailController.text = profileInfo!['email'];
-        _addressController.text = profileInfo!['address'];
+        workingType = profileInfo?['work_position'] ?? 0;
+        _nameController.text = profileInfo?['name'] ?? '';
+        _emailController.text = profileInfo?['email'] ?? '';
+        _mobileController.text = profileInfo?['mobile'] ?? '';
+        _dobController.text = _formatDate(profileInfo?['dob'] ?? '');
+        _genderController.text = profileInfo?['gender'] ?? '';
+        _addressController.text = profileInfo?['address'] ?? '';
+        selectedPincode = {
+          "id": profileInfo?['pincode_id'] ?? 0,
+          "pincode": profileInfo?['is_pincode']?.toString() ?? ''
+        };
+        _pincodeController.text = profileInfo?['is_pincode']?.toString() ?? '';
+        selectedArea = profileInfo?['is_agent_area_name'] ?? {};
+        _areaController.text = profileInfo?['is_area_name']?.toString() ?? '';
+        _yearsOfExperienceController.text =
+            profileInfo?['years_of_exp']?.toString() ?? '';
         _projectsCountController.text =
-            profileInfo!['no_of_projects'].toString();
+            profileInfo?['no_of_projects']?.toString() ?? '';
 
         _uploadedPhotoLink = profileInfo!['is_agent_image'] ?? '';
         _photoName = profileInfo!['agent_image']?.toString() ?? '';
@@ -2254,6 +2300,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         Common().showToast(result['message']);
       }
     } catch (e) {
+      print(e);
       if (!context.mounted) {
         return;
       }
@@ -2574,89 +2621,92 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                   ),
                                 ),
                               ),
-                              Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Radio(
-                                        value: 1,
-                                        groupValue: workingType,
-                                        activeColor: primaryColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            workingType = value!;
-                                          });
-                                        },
-                                      ),
-                                      const Text(
-                                        'Freelancer',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                  const HorizontalSpace(width: 15),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Radio(
-                                        value: 2,
-                                        groupValue: workingType,
-                                        activeColor: primaryColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            workingType = value!;
-                                          });
-                                        },
-                                      ),
-                                      const Text(
-                                        'Broker',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                  const HorizontalSpace(width: 15),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Radio(
-                                        value: 3,
-                                        groupValue: workingType,
-                                        activeColor: primaryColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            workingType = value!;
-                                          });
-                                        },
-                                      ),
-                                      const Text(
-                                        'Telecaller',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                  const HorizontalSpace(width: 15),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Radio(
-                                        value: 4,
-                                        groupValue: workingType,
-                                        activeColor: primaryColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            workingType = value!;
-                                          });
-                                        },
-                                      ),
-                                      const Text(
-                                        'Employer',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              const VerticalSpace(height: 8.5),
+                              Center(
+                                child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio(
+                                          value: 1,
+                                          groupValue: workingType,
+                                          activeColor: primaryColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              workingType = value!;
+                                            });
+                                          },
+                                        ),
+                                        const Text(
+                                          'Freelancer',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                    const HorizontalSpace(width: 15),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio(
+                                          value: 2,
+                                          groupValue: workingType,
+                                          activeColor: primaryColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              workingType = value!;
+                                            });
+                                          },
+                                        ),
+                                        const Text(
+                                          'Broker',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                    const HorizontalSpace(width: 15),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio(
+                                          value: 3,
+                                          groupValue: workingType,
+                                          activeColor: primaryColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              workingType = value!;
+                                            });
+                                          },
+                                        ),
+                                        const Text(
+                                          'Telecaller',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                    const HorizontalSpace(width: 15),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio(
+                                          value: 4,
+                                          groupValue: workingType,
+                                          activeColor: primaryColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              workingType = value!;
+                                            });
+                                          },
+                                        ),
+                                        const Text(
+                                          'Employee',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                               const VerticalSpace(height: 25),
                               const Text(
@@ -2710,7 +2760,34 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                 },
                               ),
                               const VerticalSpace(height: 17.5),
+                              const Text(
+                                'Mobile',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const VerticalSpace(height: 6),
+                              TextFormField(
+                                readOnly: true,
+                                style: const TextStyle(fontSize: 14),
+                                controller: _mobileController,
+                                decoration: const InputDecoration(
+                                    hintText: 'Enter Mobile'),
+                                validator: (value) {
+                                  if (value.toString().trim().isEmpty ||
+                                      value == null) {
+                                    return 'Enter mobile number';
+                                  } else if (!numberRegex
+                                      .hasMatch(value.toString().trim())) {
+                                    return 'Invalid mobile number';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              const VerticalSpace(height: 17.5),
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Column(
@@ -2817,6 +2894,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               ),
                               const VerticalSpace(height: 17.5),
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Column(
@@ -2824,27 +2902,55 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         const Text(
-                                          'Area',
+                                          'Pincode',
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         const VerticalSpace(height: 6),
                                         TextFormField(
+                                          readOnly: true,
                                           style: const TextStyle(fontSize: 14),
-                                          controller: _areaController,
-                                          decoration: const InputDecoration(
-                                              hintText: 'Enter your area'),
+                                          controller: _pincodeController,
+                                          decoration: InputDecoration(
+                                            hintText: 'Select pincode',
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Image.asset(
+                                                'assets/images/down.png',
+                                                height: 5,
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) =>
+                                                    CommonModal.pincode(
+                                                        chosenPincode:
+                                                            selectedPincode,
+                                                        onSelect: (pincode) {
+                                                          setState(() {
+                                                            selectedPincode =
+                                                                pincode;
+                                                            _pincodeController
+                                                                .text = pincode[
+                                                                    'pincode']
+                                                                .toString();
+                                                            _areaController
+                                                                .clear();
+                                                            selectedArea = null;
+                                                          });
+                                                        }));
+                                          },
                                           validator: (value) {
                                             if (value
                                                     .toString()
                                                     .trim()
                                                     .isEmpty ||
                                                 value == null) {
-                                              return 'Enter your area';
-                                            } else if (!nameRegex.hasMatch(
-                                                value.toString().trim())) {
-                                              return 'Invalid area';
+                                              return 'Select pincode';
                                             } else {
                                               return null;
                                             }
@@ -2860,27 +2966,62 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         const Text(
-                                          'Pincode',
+                                          'Area',
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         const VerticalSpace(height: 6),
                                         TextFormField(
+                                          readOnly: true,
                                           style: const TextStyle(fontSize: 14),
-                                          controller: _pincodeController,
-                                          decoration: const InputDecoration(
-                                              hintText: 'Enter pincode'),
+                                          controller: _areaController,
+                                          onTap: () {
+                                            if (selectedPincode != null) {
+                                              showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      CommonModal.area(
+                                                          chosenPincode:
+                                                              selectedPincode,
+                                                          chosenArea:
+                                                              selectedArea,
+                                                          onSelect: (area) {
+                                                            setState(() {
+                                                              selectedArea =
+                                                                  area;
+                                                              _areaController
+                                                                      .text =
+                                                                  area[
+                                                                      'area_name'];
+                                                            });
+                                                          }));
+                                            } else {
+                                              Common().showToast(
+                                                  'Please select pincode');
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText: 'Select area',
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Image.asset(
+                                                'assets/images/down.png',
+                                                height: 5,
+                                              ),
+                                            ),
+                                          ),
                                           validator: (value) {
                                             if (value
                                                     .toString()
                                                     .trim()
                                                     .isEmpty ||
                                                 value == null) {
-                                              return 'Enter pincode';
+                                              return 'Select area';
                                             } else if (!nameRegex.hasMatch(
                                                 value.toString().trim())) {
-                                              return 'Invalid pincode';
+                                              return 'Invalid area';
                                             } else {
                                               return null;
                                             }
@@ -2892,32 +3033,6 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                 ],
                               ),
                               const VerticalSpace(height: 17.5),
-                              // const Text(
-                              //   'No. of Projects Handled',
-                              //   style: TextStyle(
-                              //       color: Colors.black,
-                              //       fontWeight: FontWeight.bold),
-                              // ),
-                              // const VerticalSpace(height: 6),
-                              // TextFormField(
-                              //   style: const TextStyle(fontSize: 14),
-                              //   controller: _projectsCountController,
-                              //   keyboardType: TextInputType.number,
-                              //   decoration: const InputDecoration(
-                              //       hintText: 'No. of Projects Handled'),
-                              //   validator: (value) {
-                              //     if (value.toString().trim().isEmpty ||
-                              //         value == null) {
-                              //       return 'Enter no. of projects handled';
-                              //     } else if (!numberRegex
-                              //         .hasMatch(value.toString().trim())) {
-                              //       return 'Invalid mail address';
-                              //     } else {
-                              //       return null;
-                              //     }
-                              //   },
-                              // ),
-
                               const Text(
                                 'Years of Experience',
                                 style: TextStyle(
@@ -2938,6 +3053,32 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                   } else if (!numberRegex
                                       .hasMatch(value.toString().trim())) {
                                     return 'Enter in numbers';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              const VerticalSpace(height: 17.5),
+                              const Text(
+                                'No. of Projects Handled',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const VerticalSpace(height: 6),
+                              TextFormField(
+                                style: const TextStyle(fontSize: 14),
+                                controller: _projectsCountController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                    hintText: 'No. of Projects Handled'),
+                                validator: (value) {
+                                  if (value.toString().trim().isEmpty ||
+                                      value == null) {
+                                    return 'Enter no. of projects handled';
+                                  } else if (!numberRegex
+                                      .hasMatch(value.toString().trim())) {
+                                    return 'Invalid mail address';
                                   } else {
                                     return null;
                                   }

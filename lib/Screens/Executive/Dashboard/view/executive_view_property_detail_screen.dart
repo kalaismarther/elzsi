@@ -90,6 +90,7 @@ class _ExecutiveViewPropertyDetailScreenState
     final userInfo = await DatabaseHelper().initDb();
     var data = {"user_id": userInfo.userId, "project_id": widget.projectNo};
     print(data);
+    print(userInfo.token);
 
     if (!context.mounted) {
       return;

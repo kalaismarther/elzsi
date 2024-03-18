@@ -8,12 +8,14 @@ import 'package:elzsi/Utils/button_loader.dart';
 import 'package:elzsi/Utils/colors.dart';
 import 'package:elzsi/Utils/common.dart';
 import 'package:elzsi/Utils/horizontalspace.dart';
+import 'package:elzsi/Widgets/common_modal.dart';
 import 'package:elzsi/utils/navigations.dart';
 import 'package:elzsi/Utils/regex.dart';
 import 'package:elzsi/Utils/verticalspace.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,9 +39,10 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
   void initState() {
     setState(() {
       _nameController.text = widget.data['agent_name'] ?? '';
-      _emailController.text = widget.data['agent_email'] ?? '';
+      _emailController.text = widget.data['agent_email']?.toString() ?? '';
       _addressController.text = widget.data['address'] ?? '';
-      _projectsCountController.text = widget.data['no_of_projects'] ?? '';
+      _projectsCountController.text =
+          widget.data['no_of_projects']?.toString() ?? '';
       if (widget.data['created_seller'] != null &&
           widget.data['created_seller'] != "") {
         existingControllers[0][0].text =
@@ -59,12 +62,25 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
   //FOR LOADER
   bool isLoading = false;
 
-  //CONTROLLERS
+//CONTROLLERS
   final _scrollController = ScrollController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  // final _mobileController = TextEditingController();
   final _addressController = TextEditingController();
   final _projectsCountController = TextEditingController();
+  final _dobController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _areaController = TextEditingController();
+  final _pincodeController = TextEditingController();
+  final _yearsOfExperienceController = TextEditingController();
+
+  //EXECUTIVE TYPE
+  int workingType = 1;
+
+  //ADDRESS INFO
+  Map? selectedPincode;
+  Map? selectedArea;
 
   //FOR SELECTED DOCUMENTS
   File? _photo;
@@ -205,6 +221,36 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
     );
   }
 
+  //CHOOSE DOB
+  void _chooseDOB() async {
+    final pickedDate = await showDatePicker(
+        context: context, firstDate: DateTime(1900), lastDate: DateTime.now());
+
+    if (pickedDate != null) {
+      setState(() {
+        _dobController.text = DateFormat('dd-MM-yyyy').format(pickedDate);
+      });
+    }
+  }
+
+  // String _formatDate(String date) {
+  //   if (date.isEmpty || date == '') {
+  //     return '';
+  //   }
+  //   DateTime inputDate = DateTime.parse(date);
+  //   String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
+  //   return formattedDate;
+  // }
+
+  String _formatDate1(String date) {
+    if (date.isEmpty || date == '') {
+      return '';
+    }
+    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+    return formattedDate;
+  }
+
   void _updateProfile() async {
     if (_formKey.currentState!.validate()) {
       // if (_photo == null) {
@@ -229,10 +275,17 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
 
         //DATA - BODY FIELD
         request.fields['user_id'] = widget.data['id'].toString();
+        request.fields['work_position'] = workingType.toString();
         request.fields['name'] = _nameController.text;
         request.fields['email'] = _emailController.text;
+        request.fields['dob'] = _formatDate1(_dobController.text);
+        request.fields['gender'] = _genderController.text;
         request.fields['address'] = _addressController.text;
         request.fields['mobile'] = widget.data['mobile'];
+        request.fields['area_id'] = selectedArea!['id'].toString();
+        request.fields['pincode_id'] = selectedPincode!['id'].toString();
+        request.fields['years_of_exp'] =
+            _yearsOfExperienceController.text.toString();
         request.fields['no_of_projects'] = _projectsCountController.text;
         for (int info = 0; info < existingControllers.length; info++) {
           if (existingControllers[info][0].text.isNotEmpty ||
@@ -352,7 +405,54 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
-                      const VerticalSpace(height: 25),
+                      const VerticalSpace(height: 15),
+                      Center(
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Radio(
+                                  value: 5,
+                                  groupValue: workingType,
+                                  activeColor: primaryColor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      workingType = value!;
+                                    });
+                                  },
+                                ),
+                                const Text(
+                                  'Agent',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            const HorizontalSpace(width: 25),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Radio(
+                                  value: 6,
+                                  groupValue: workingType,
+                                  activeColor: primaryColor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      workingType = value!;
+                                    });
+                                  },
+                                ),
+                                const Text(
+                                  'Employee',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const VerticalSpace(height: 15),
                       const Text(
                         'Name',
                         style: TextStyle(
@@ -402,6 +502,82 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                         },
                       ),
                       const VerticalSpace(height: 17.5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'DOB',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const VerticalSpace(height: 6),
+                                TextFormField(
+                                  readOnly: true,
+                                  onTap: _chooseDOB,
+                                  style: const TextStyle(fontSize: 14),
+                                  controller: _dobController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter your DOB',
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Image.asset(
+                                        'assets/images/calendar.png',
+                                        height: 5,
+                                      ),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value.toString().trim().isEmpty ||
+                                        value == null) {
+                                      return 'Enter Date of Birth';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const HorizontalSpace(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Gender',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const VerticalSpace(height: 6),
+                                TextFormField(
+                                  style: const TextStyle(fontSize: 14),
+                                  controller: _genderController,
+                                  decoration: const InputDecoration(
+                                      hintText: 'Enter your gender'),
+                                  validator: (value) {
+                                    if (value.toString().trim().isEmpty ||
+                                        value == null) {
+                                      return 'Enter your gender';
+                                    } else if (!nameRegex
+                                        .hasMatch(value.toString().trim())) {
+                                      return 'Invalid gender';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const VerticalSpace(height: 17.5),
                       const Text(
                         'Address',
                         style: TextStyle(
@@ -417,6 +593,162 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                           if (value.toString().trim().isEmpty ||
                               value == null) {
                             return 'Enter address';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      const VerticalSpace(height: 17.5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Pincode',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const VerticalSpace(height: 6),
+                                TextFormField(
+                                  readOnly: true,
+                                  style: const TextStyle(fontSize: 14),
+                                  controller: _pincodeController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Select pincode',
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Image.asset(
+                                        'assets/images/down.png',
+                                        height: 5,
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) =>
+                                            CommonModal.pincode(
+                                                userId: widget.data['id']
+                                                    .toString(),
+                                                token: widget.data['api_token']
+                                                    .toString(),
+                                                chosenPincode: selectedPincode,
+                                                onSelect: (pincode) {
+                                                  setState(() {
+                                                    selectedPincode = pincode;
+                                                    _pincodeController.text =
+                                                        pincode['pincode']
+                                                            .toString();
+                                                    _areaController.clear();
+                                                    selectedArea = null;
+                                                  });
+                                                }));
+                                  },
+                                  validator: (value) {
+                                    if (value.toString().trim().isEmpty ||
+                                        value == null) {
+                                      return 'Select pincode';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const HorizontalSpace(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Area',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const VerticalSpace(height: 6),
+                                TextFormField(
+                                  readOnly: true,
+                                  style: const TextStyle(fontSize: 14),
+                                  controller: _areaController,
+                                  onTap: () {
+                                    if (selectedPincode != null) {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) =>
+                                              CommonModal.area(
+                                                  userId: widget.data['id']
+                                                      .toString(),
+                                                  token: widget
+                                                      .data['api_token']
+                                                      .toString(),
+                                                  chosenPincode:
+                                                      selectedPincode,
+                                                  chosenArea: selectedArea,
+                                                  onSelect: (area) {
+                                                    setState(() {
+                                                      selectedArea = area;
+                                                      _areaController.text =
+                                                          area['area_name'];
+                                                    });
+                                                  }));
+                                    } else {
+                                      Common()
+                                          .showToast('Please select pincode');
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: 'Select area',
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Image.asset(
+                                        'assets/images/down.png',
+                                        height: 5,
+                                      ),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value.toString().trim().isEmpty ||
+                                        value == null) {
+                                      return 'Select area';
+                                    } else if (!nameRegex
+                                        .hasMatch(value.toString().trim())) {
+                                      return 'Invalid area';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const VerticalSpace(height: 17.5),
+                      const Text(
+                        'Years of Experience',
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      const VerticalSpace(height: 6),
+                      TextFormField(
+                        style: const TextStyle(fontSize: 14),
+                        controller: _yearsOfExperienceController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                            hintText: 'Enter years of experience'),
+                        validator: (value) {
+                          if (value.toString().trim().isEmpty ||
+                              value == null) {
+                            return 'Enter years of experience';
+                          } else if (!numberRegex
+                              .hasMatch(value.toString().trim())) {
+                            return 'Enter in numbers';
                           } else {
                             return null;
                           }

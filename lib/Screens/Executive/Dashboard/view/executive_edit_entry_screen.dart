@@ -87,6 +87,15 @@ class _ExecutiveEditEntryScreenState extends State<ExecutiveEditEntryScreen> {
     return formattedDate;
   }
 
+  String _formatDate1(String date) {
+    if (date.isEmpty || date == '') {
+      return '';
+    }
+    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+    return formattedDate;
+  }
+
   void _showDate() async {
     var today = DateTime.now();
     final date = await showDatePicker(
@@ -99,7 +108,7 @@ class _ExecutiveEditEntryScreenState extends State<ExecutiveEditEntryScreen> {
     if (date != null) {
       setState(() {
         pickedDate = date;
-        _reminderController.text = DateFormat('yyyy-MM-dd').format(date);
+        _reminderController.text = DateFormat('dd-MM-yyyy').format(date);
       });
     }
   }
@@ -120,7 +129,7 @@ class _ExecutiveEditEntryScreenState extends State<ExecutiveEditEntryScreen> {
           "contact_number": _contactNoController.text,
           "call_visit": visitType,
           "comments": _commentsController.text,
-          "reminder_date": _reminderController.text
+          "reminder_date": _formatDate1(_reminderController.text)
         };
 
         if (!context.mounted) {
@@ -314,7 +323,7 @@ class _ExecutiveEditEntryScreenState extends State<ExecutiveEditEntryScreen> {
                               }),
                           const Flexible(
                             child: Text(
-                              'Compaign',
+                              'Campaign',
                               style: TextStyle(fontSize: 13),
                             ),
                           ),

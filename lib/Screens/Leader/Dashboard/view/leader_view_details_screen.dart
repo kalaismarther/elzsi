@@ -127,7 +127,6 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
             children: [
               const VerticalSpace(height: 10),
               Container(
-                width: double.infinity,
                 decoration: BoxDecoration(
                   color: inputBg,
                   borderRadius: BorderRadius.circular(7),
@@ -147,7 +146,7 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(7),
                             child: CachedNetworkImage(
-                              imageUrl: widget.data['is_business_logo'],
+                              imageUrl: widget.data['is_profile_image'],
                               placeholder: (context, url) => SizedBox(
                                 height: 175,
                                 width: double.infinity,
@@ -172,6 +171,8 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                                       image: imageProvider, fit: BoxFit.cover),
                                 ),
                               ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.image_not_supported),
                             ),
                           ),
                     const VerticalSpace(height: 8),

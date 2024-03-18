@@ -29,7 +29,9 @@ class DatabaseHelper {
             token: row['usertoken'] as String,
             fcmToken: row['fcmtoken'] as String))
         .toList();
-    return userInfo[0];
+    return userInfo.isNotEmpty
+        ? userInfo[0]
+        : const UserModel(userId: 0, token: '', fcmToken: '', deviceId: '');
   }
 
   Future<void> insertDb(UserModel userInfo) async {

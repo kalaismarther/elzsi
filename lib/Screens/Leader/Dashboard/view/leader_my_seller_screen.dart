@@ -182,14 +182,14 @@ class _LeaderMySellerScreenState extends State<LeaderMySellerScreen> {
                                           size: 35,
                                         )
                                       : SizedBox(
-                                          height: 35,
-                                          width: 35,
+                                          height: 45,
+                                          width: 45,
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(6),
                                             child: CachedNetworkImage(
                                               imageUrl: mySellers[index]
-                                                  ['is_business_logo'],
+                                                  ['is_profile_image'],
                                               placeholder: (context, url) =>
                                                   Shimmer.fromColors(
                                                 baseColor:
@@ -214,6 +214,10 @@ class _LeaderMySellerScreenState extends State<LeaderMySellerScreen> {
                                                         image: imageProvider,
                                                         fit: BoxFit.cover)),
                                               ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons
+                                                          .image_not_supported),
                                             ),
                                           ),
                                         ),

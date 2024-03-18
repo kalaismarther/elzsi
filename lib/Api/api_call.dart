@@ -217,6 +217,40 @@ class Api {
     }
   }
 
+  Future getPincodes(data, token, context) async {
+    String url = liveURL + getPincodesUrl;
+
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json', 'x-api-key': token},
+        body: json.encode(data));
+
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['status'].toString() == '3') {
+        Common().showToast('Session Expired');
+        Common().logout(context);
+      } else {
+        return json.decode(response.body);
+      }
+    }
+  }
+
+  Future getAreas(data, token, context) async {
+    String url = liveURL + getAreasUrl;
+
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json', 'x-api-key': token},
+        body: json.encode(data));
+
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['status'].toString() == '3') {
+        Common().showToast('Session Expired');
+        Common().logout(context);
+      } else {
+        return json.decode(response.body);
+      }
+    }
+  }
+
   Future deleteProfileImage(data, token, context) async {
     String url = liveURL + deleteProfileImageUrl;
 

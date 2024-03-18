@@ -12,6 +12,7 @@ import 'package:elzsi/Utils/colors.dart';
 import 'package:elzsi/Utils/horizontalspace.dart';
 import 'package:elzsi/Utils/navigations.dart';
 import 'package:elzsi/Utils/verticalspace.dart';
+import 'package:elzsi/Widgets/common_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:elzsi/Utils/common.dart';
 import 'package:elzsi/Utils/regex.dart';
@@ -19,6 +20,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class LeaderMyProfileScreen extends StatefulWidget {
@@ -53,8 +55,21 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
   final _scrollController = ScrollController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _mobileController = TextEditingController();
   final _addressController = TextEditingController();
   final _projectsCountController = TextEditingController();
+  final _dobController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _areaController = TextEditingController();
+  final _pincodeController = TextEditingController();
+  final _yearsOfExperienceController = TextEditingController();
+
+  //EXECUTIVE TYPE
+  int workingType = 1;
+
+  //ADDRESS INFO
+  Map? selectedPincode;
+  Map? selectedArea;
 
   //FOR PROFILE PICTURE
   String? displayPicture;
@@ -187,6 +202,36 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
     }
   }
 
+  //CHOOSE DOB
+  void _chooseDOB() async {
+    final pickedDate = await showDatePicker(
+        context: context, firstDate: DateTime(1900), lastDate: DateTime.now());
+
+    if (pickedDate != null) {
+      setState(() {
+        _dobController.text = DateFormat('dd-MM-yyyy').format(pickedDate);
+      });
+    }
+  }
+
+  String _formatDate(String date) {
+    if (date.isEmpty || date == '') {
+      return '';
+    }
+    DateTime inputDate = DateTime.parse(date);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
+    return formattedDate;
+  }
+
+  String _formatDate1(String date) {
+    if (date.isEmpty || date == '') {
+      return '';
+    }
+    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+    return formattedDate;
+  }
+
   void _addExistingSellerDetails() {
     setState(() {
       existingControllers.add([
@@ -236,10 +281,17 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
 
         //DATA - BODY FIELD
         request.fields['user_id'] = userInfo.userId.toString();
+        request.fields['work_position'] = workingType.toString();
         request.fields['name'] = _nameController.text;
         request.fields['email'] = _emailController.text;
+        request.fields['dob'] = _formatDate1(_dobController.text);
+        request.fields['gender'] = _genderController.text;
         request.fields['address'] = _addressController.text;
-        request.fields['mobile'] = profileInfo!['mobile'];
+        request.fields['mobile'] = profileInfo!['mobile'].toString();
+        request.fields['area_id'] = selectedArea!['id'].toString();
+        request.fields['pincode_id'] = selectedPincode!['id'].toString();
+        request.fields['years_of_exp'] =
+            _yearsOfExperienceController.text.toString();
         request.fields['no_of_projects'] = _projectsCountController.text;
 
         for (int info = 0; info < existingControllers.length; info++) {
@@ -328,17 +380,32 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
     }
 
     var data = {"user_id": userInfo.userId};
+    print(data);
+    print(userInfo.token);
 
     final result = await Api().getAgentProfile(data, userInfo.token, context);
 
     if (result['status'].toString() == '1') {
       setState(() {
         profileInfo = result['data'];
-        _nameController.text = profileInfo!['name'];
-        _emailController.text = profileInfo!['email'];
-        _addressController.text = profileInfo!['address'];
+        workingType = profileInfo?['work_position'] ?? 0;
+        _nameController.text = profileInfo?['name'] ?? '';
+        _emailController.text = profileInfo?['email'] ?? '';
+        _mobileController.text = profileInfo?['mobile'] ?? '';
+        _dobController.text = _formatDate(profileInfo?['dob'] ?? '');
+        _genderController.text = profileInfo?['gender'] ?? '';
+        _addressController.text = profileInfo?['address'] ?? '';
+        selectedPincode = {
+          "id": profileInfo?['pincode_id'] ?? 0,
+          "pincode": profileInfo?['is_pincode']?.toString() ?? ''
+        };
+        _pincodeController.text = profileInfo?['is_pincode']?.toString() ?? '';
+        selectedArea = profileInfo?['is_agent_area_name'] ?? {};
+        _areaController.text = profileInfo?['is_area_name']?.toString() ?? '';
+        _yearsOfExperienceController.text =
+            profileInfo?['years_of_exp']?.toString() ?? '';
         _projectsCountController.text =
-            profileInfo!['no_of_projects'].toString();
+            profileInfo?['no_of_projects']?.toString() ?? '';
 
         _uploadedPhotoLink = profileInfo!['is_agent_image'] ?? '';
         _photoName = profileInfo!['agent_image']?.toString() ?? '';
@@ -466,6 +533,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
         Common().showToast(result['message']);
       }
     } catch (e) {
+      print(e);
       if (!context.mounted) {
         return;
       }
@@ -620,6 +688,11 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const VerticalSpace(height: 15),
+                              const Text(
+                                'LEADER',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
                               Center(
                                 child: InkWell(
                                   onTap: () {
@@ -781,6 +854,53 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                   ),
                                 ),
                               ),
+                              const VerticalSpace(height: 8.5),
+                              Center(
+                                child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio(
+                                          value: 5,
+                                          groupValue: workingType,
+                                          activeColor: primaryColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              workingType = value!;
+                                            });
+                                          },
+                                        ),
+                                        const Text(
+                                          'Agent',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                    const HorizontalSpace(width: 25),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio(
+                                          value: 6,
+                                          groupValue: workingType,
+                                          activeColor: primaryColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              workingType = value!;
+                                            });
+                                          },
+                                        ),
+                                        const Text(
+                                          'Employee',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                               const VerticalSpace(height: 25),
                               const Text(
                                 'Name',
@@ -834,6 +954,117 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                               ),
                               const VerticalSpace(height: 17.5),
                               const Text(
+                                'Mobile',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const VerticalSpace(height: 6),
+                              TextFormField(
+                                readOnly: true,
+                                style: const TextStyle(fontSize: 14),
+                                controller: _mobileController,
+                                decoration: const InputDecoration(
+                                    hintText: 'Enter Mobile'),
+                                validator: (value) {
+                                  if (value.toString().trim().isEmpty ||
+                                      value == null) {
+                                    return 'Enter mobile number';
+                                  } else if (!numberRegex
+                                      .hasMatch(value.toString().trim())) {
+                                    return 'Invalid mobile number';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              const VerticalSpace(height: 17.5),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'DOB',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const VerticalSpace(height: 6),
+                                        TextFormField(
+                                          readOnly: true,
+                                          onTap: _chooseDOB,
+                                          style: const TextStyle(fontSize: 14),
+                                          controller: _dobController,
+                                          decoration: InputDecoration(
+                                            hintText: 'Enter your DOB',
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(15.0),
+                                              child: Image.asset(
+                                                'assets/images/calendar.png',
+                                                height: 5,
+                                              ),
+                                            ),
+                                          ),
+                                          validator: (value) {
+                                            if (value
+                                                    .toString()
+                                                    .trim()
+                                                    .isEmpty ||
+                                                value == null) {
+                                              return 'Enter Date of Birth';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const HorizontalSpace(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Gender',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const VerticalSpace(height: 6),
+                                        TextFormField(
+                                          style: const TextStyle(fontSize: 14),
+                                          controller: _genderController,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Enter your gender'),
+                                          validator: (value) {
+                                            if (value
+                                                    .toString()
+                                                    .trim()
+                                                    .isEmpty ||
+                                                value == null) {
+                                              return 'Enter your gender';
+                                            } else if (!nameRegex.hasMatch(
+                                                value.toString().trim())) {
+                                              return 'Invalid gender';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const VerticalSpace(height: 17.5),
+                              const Text(
                                 'Address',
                                 style: TextStyle(
                                     color: Colors.black,
@@ -849,6 +1080,172 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                   if (value.toString().trim().isEmpty ||
                                       value == null) {
                                     return 'Enter address';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              const VerticalSpace(height: 17.5),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Pincode',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const VerticalSpace(height: 6),
+                                        TextFormField(
+                                          readOnly: true,
+                                          style: const TextStyle(fontSize: 14),
+                                          controller: _pincodeController,
+                                          decoration: InputDecoration(
+                                            hintText: 'Select pincode',
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Image.asset(
+                                                'assets/images/down.png',
+                                                height: 5,
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) =>
+                                                    CommonModal.pincode(
+                                                        chosenPincode:
+                                                            selectedPincode,
+                                                        onSelect: (pincode) {
+                                                          setState(() {
+                                                            selectedPincode =
+                                                                pincode;
+                                                            _pincodeController
+                                                                .text = pincode[
+                                                                    'pincode']
+                                                                .toString();
+                                                            _areaController
+                                                                .clear();
+                                                            selectedArea = null;
+                                                          });
+                                                        }));
+                                          },
+                                          validator: (value) {
+                                            if (value
+                                                    .toString()
+                                                    .trim()
+                                                    .isEmpty ||
+                                                value == null) {
+                                              return 'Select pincode';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const HorizontalSpace(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Area',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const VerticalSpace(height: 6),
+                                        TextFormField(
+                                          readOnly: true,
+                                          style: const TextStyle(fontSize: 14),
+                                          controller: _areaController,
+                                          onTap: () {
+                                            if (selectedPincode != null) {
+                                              showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      CommonModal.area(
+                                                          chosenPincode:
+                                                              selectedPincode,
+                                                          chosenArea:
+                                                              selectedArea,
+                                                          onSelect: (area) {
+                                                            setState(() {
+                                                              selectedArea =
+                                                                  area;
+                                                              _areaController
+                                                                      .text =
+                                                                  area[
+                                                                      'area_name'];
+                                                            });
+                                                          }));
+                                            } else {
+                                              Common().showToast(
+                                                  'Please select pincode');
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText: 'Select area',
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Image.asset(
+                                                'assets/images/down.png',
+                                                height: 5,
+                                              ),
+                                            ),
+                                          ),
+                                          validator: (value) {
+                                            if (value
+                                                    .toString()
+                                                    .trim()
+                                                    .isEmpty ||
+                                                value == null) {
+                                              return 'Select area';
+                                            } else if (!nameRegex.hasMatch(
+                                                value.toString().trim())) {
+                                              return 'Invalid area';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const VerticalSpace(height: 17.5),
+                              const Text(
+                                'Years of Experience',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const VerticalSpace(height: 6),
+                              TextFormField(
+                                style: const TextStyle(fontSize: 14),
+                                controller: _yearsOfExperienceController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                    hintText: 'Enter years of experience'),
+                                validator: (value) {
+                                  if (value.toString().trim().isEmpty ||
+                                      value == null) {
+                                    return 'Enter years of experience';
+                                  } else if (!numberRegex
+                                      .hasMatch(value.toString().trim())) {
+                                    return 'Enter in numbers';
                                   } else {
                                     return null;
                                   }

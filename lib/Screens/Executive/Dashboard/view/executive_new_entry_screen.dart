@@ -88,9 +88,19 @@ class _ExecutiveNewEntryScreenState extends State<ExecutiveNewEntryScreen> {
     if (date != null) {
       setState(() {
         pickedDate = date;
-        _reminderController.text = DateFormat('yyyy-MM-dd').format(date);
+
+        _reminderController.text = DateFormat('dd-MM-yyyy').format(date);
       });
     }
+  }
+
+  String _formatDate1(String date) {
+    if (date.isEmpty || date == '') {
+      return '';
+    }
+    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+    return formattedDate;
   }
 
   // void _addNewEntry() {
@@ -133,13 +143,11 @@ class _ExecutiveNewEntryScreenState extends State<ExecutiveNewEntryScreen> {
           "contact_number": _contactNoController.text,
           "call_visit": visitType,
           "comments": _commentsController.text,
-          "reminder_date": _reminderController.text
+          "reminder_date": _formatDate1(_reminderController.text)
         };
-        print(data);
 
         final result =
             await Api().projectUnitEntry(data, userInfo.token, context);
-        print(result);
 
         if (result['status'].toString() == '1') {
           if (!context.mounted) {
@@ -359,7 +367,7 @@ class _ExecutiveNewEntryScreenState extends State<ExecutiveNewEntryScreen> {
                         }),
                     const Flexible(
                       child: Text(
-                        'Compaign',
+                        'Campaign',
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
