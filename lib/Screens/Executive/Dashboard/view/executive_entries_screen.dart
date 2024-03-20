@@ -223,55 +223,60 @@ class _ExecutiveEntriesScreenState extends State<ExecutiveEntriesScreen> {
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                     const VerticalSpace(height: 5),
+                                    // Text(
+                                    //   'Source : ${widget.agentEntriesList[index]?['enquiry_by'] ?? ''}',
+                                    //   style: const TextStyle(fontSize: 12),
+                                    // ),
+                                    // const VerticalSpace(height: 5),
                                   ],
                                 ),
                               ),
-                              widget.agentEntriesList[index]?['unit_no'] ==
-                                          null ||
-                                      widget.agentEntriesList[index]
-                                              ?['unit_id'] ==
-                                          0 ||
-                                      widget.agentEntriesList[index]
-                                                  ?['unit_status']
-                                              .toString()
-                                              .trim() ==
-                                          'REQUESTED' ||
-                                      widget.agentEntriesList[index]
-                                                  ?['unit_status']
-                                              .toString()
-                                              .trim() ==
-                                          'AVAILABLE'
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            _goToCorrespondingApp(
-                                                'tel',
-                                                widget.agentEntriesList[index]
-                                                        ?['mobile'] ??
-                                                    '');
-                                          },
-                                          icon: Image.asset(
-                                            'assets/images/phone.png',
-                                            height: 28,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            _goToCorrespondingApp(
-                                                'whatsapp',
-                                                widget.agentEntriesList[index]
-                                                        ?['mobile'] ??
-                                                    '');
-                                          },
-                                          icon: Image.asset(
-                                            'assets/images/whatsapp.png',
-                                            height: 28,
-                                          ),
-                                        ),
-                                        IconButton(
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      _goToCorrespondingApp(
+                                          'tel',
+                                          widget.agentEntriesList[index]
+                                                  ?['mobile'] ??
+                                              '');
+                                    },
+                                    icon: Image.asset(
+                                      'assets/images/phone.png',
+                                      height: 28,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      _goToCorrespondingApp(
+                                          'whatsapp',
+                                          widget.agentEntriesList[index]
+                                                  ?['mobile'] ??
+                                              '');
+                                    },
+                                    icon: Image.asset(
+                                      'assets/images/whatsapp.png',
+                                      height: 28,
+                                    ),
+                                  ),
+                                  widget.agentEntriesList[index]?['unit_no'] ==
+                                              null ||
+                                          widget.agentEntriesList[index]
+                                                  ?['unit_id'] ==
+                                              0 ||
+                                          widget.agentEntriesList[index]
+                                                      ?['unit_status']
+                                                  .toString()
+                                                  .trim() ==
+                                              'REQUESTED' ||
+                                          widget.agentEntriesList[index]
+                                                      ?['unit_status']
+                                                  .toString()
+                                                  .trim() ==
+                                              'AVAILABLE'
+                                      ? IconButton(
                                           onPressed: () {
                                             Nav().replace(
                                                 context,
@@ -290,10 +295,10 @@ class _ExecutiveEntriesScreenState extends State<ExecutiveEntriesScreen> {
                                             'assets/images/edit.png',
                                             height: 28,
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  : const VerticalSpace(height: 0)
+                                        )
+                                      : const VerticalSpace(height: 0),
+                                ],
+                              )
                             ],
                           ),
                         ),

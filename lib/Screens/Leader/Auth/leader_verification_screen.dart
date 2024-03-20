@@ -200,11 +200,32 @@ class _LeaderVerificationScreenState extends State<LeaderVerificationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/login-banner.png',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              Stack(
+                children: [
+                  Image.asset(
+                    'assets/images/login-banner.png',
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Platform.isIOS
+                      ? Positioned(
+                          top: 35,
+                          left: 10,
+                          child: IconButton(
+                            onPressed: () {
+                              Nav().pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.black,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(
+                          height: 0,
+                        )
+                ],
               ),
               const SizedBox(height: 10),
               Padding(

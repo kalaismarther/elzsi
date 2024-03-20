@@ -47,8 +47,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> notification() async {
+    final fcm = FirebaseMessaging.instance;
+    await fcm.requestPermission();
     // ignore: unused_local_variable
-    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final fcmToken = await fcm.getToken();
 
     await FirebaseMessaging.instance.getInitialMessage();
 

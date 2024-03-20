@@ -37,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
         "user_type": userType == 0 ? "EXECUTIVE" : "LEADER",
         "mobile": _mobileNoController.text
       };
+      print(data);
       FocusScope.of(context).unfocus();
 
       try {
@@ -45,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
 
         final result = await Api().login(data);
+        print(result);
 
         if (result['status'].toString() == '1') {
           setState(() {

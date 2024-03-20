@@ -391,7 +391,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
         workingType = profileInfo?['work_position'] ?? 0;
         _nameController.text = profileInfo?['name'] ?? '';
         _emailController.text = profileInfo?['email'] ?? '';
-        _mobileController.text = profileInfo?['mobile'] ?? '';
+        _mobileController.text = profileInfo?['mobile']?.toString() ?? '';
         _dobController.text = _formatDate(profileInfo?['dob'] ?? '');
         _genderController.text = profileInfo?['gender'] ?? '';
         _addressController.text = profileInfo?['address'] ?? '';
@@ -450,8 +450,10 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
               profileInfo!['existing_sellers']?[i]?['business_name'] ?? '';
           existingControllers[i][1].text =
               profileInfo!['existing_sellers']?[i]?['person_name'] ?? '';
-          existingControllers[i][2].text =
-              profileInfo!['existing_sellers']?[i]?['contact_number'] ?? '';
+          existingControllers[i][2].text = profileInfo!['existing_sellers']?[i]
+                      ?['contact_number']
+                  ?.toString() ??
+              '';
           existingControllers[i][3].text = profileInfo!['existing_sellers']?[i]
                       ?['since_yrmonth']
                   ?.toString()
@@ -462,10 +464,14 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                   ?.toString()
                   .replaceAll('-', '/') ??
               '';
-          existingControllers[i][5].text =
-              profileInfo!['existing_sellers']?[i]?['handled_projects'] ?? '';
-          existingControllers[i][6].text =
-              profileInfo!['existing_sellers']?[i]?['position_held'] ?? '';
+          existingControllers[i][5].text = profileInfo!['existing_sellers']?[i]
+                      ?['handled_projects']
+                  ?.toString() ??
+              '';
+          existingControllers[i][6].text = profileInfo!['existing_sellers']?[i]
+                      ?['position_held']
+                  ?.toString() ??
+              '';
         }
         centerLoading = false;
       });

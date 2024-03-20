@@ -1,6 +1,6 @@
 import 'package:elzsi/Api/api_call.dart';
 import 'package:elzsi/Database/database_helper.dart';
-import 'package:elzsi/Screens/Executive/Dashboard/view/executive_edit_entry_screen.dart';
+// import 'package:elzsi/Screens/Executive/Dashboard/view/executive_edit_entry_screen.dart';
 import 'package:elzsi/Utils/button_loader.dart';
 import 'package:elzsi/Utils/colors.dart';
 import 'package:elzsi/Utils/common.dart';
@@ -145,9 +145,10 @@ class _ExecutiveNewEntryScreenState extends State<ExecutiveNewEntryScreen> {
           "comments": _commentsController.text,
           "reminder_date": _formatDate1(_reminderController.text)
         };
-
+        print(data);
         final result =
             await Api().projectUnitEntry(data, userInfo.token, context);
+        print(result);
 
         if (result['status'].toString() == '1') {
           if (!context.mounted) {
@@ -169,31 +170,60 @@ class _ExecutiveNewEntryScreenState extends State<ExecutiveNewEntryScreen> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              content: const Text(
-                'Already same person enquiry found',
-                style: TextStyle(fontSize: 16),
+              content: RichText(
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                        text:
+                            'This customer enquiry entry was previously handled by ',
+                        style: TextStyle(
+                            height: 1.6, fontSize: 15, color: Colors.black)),
+                    TextSpan(
+                        text: '${result?['data'] ?? ''} (Task Manager)',
+                        style: const TextStyle(
+                            height: 1.6,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                    const TextSpan(
+                        text: ', so this entry also added to his entry list.',
+                        style: TextStyle(
+                            height: 1.6, fontSize: 15, color: Colors.black)),
+
+                    //     const Text(
+                    //   'This customer enquiry entry was previously handled by , so this entry also added to his entry list.',
+                    //   style: TextStyle(fontSize: 16),
+                    // )
+                  ],
+                ),
               ),
               actions: [
-                TextButton(
-                  onPressed: () {
-                    Nav().pop(context);
-                  },
-                  child: const Text('Close'),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                    onPressed: () {
+                      Nav().pop(context);
+                      Nav().pop(context);
+                    },
+                    child: const Text('Ok'),
+                  ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Nav().pop(context);
-                    Nav().push(
-                      context,
-                      ExecutiveEditEntryScreen(
-                        propertyDetail: widget.propertyDetail,
-                        onBack: () {},
-                        previousEntryDetail: result['data'],
-                      ),
-                    );
-                  },
-                  child: const Text('View/edit entry'),
-                )
+                // TextButton(
+                //   onPressed: () {
+                //     Nav().pop(context);
+                //     Nav().push(
+                //       context,
+                //       ExecutiveEditEntryScreen(
+                //         propertyDetail: widget.propertyDetail,
+                //         onBack: () {},
+                //         previousEntryDetail: result['data'],
+                //       ),
+                //     );
+                //   },
+                //   child: const Text('View/edit entry'),
+                // )
               ],
             ),
           );

@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 // import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class LeaderViewPropertyDetailScreen extends StatefulWidget {
   const LeaderViewPropertyDetailScreen({super.key, required this.projectNo});
@@ -91,6 +92,21 @@ class _LeaderViewPropertyDetailScreenState
     DateTime inputDate = DateFormat("dd MMM, yyyy").parse(date);
     String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
     return formattedDate;
+  }
+
+  Future _goToCorrespondingApp(String? type, String data) async {
+    if (data.isEmpty || data == '') {
+      return;
+    }
+    try {
+      if (type == 'tel') {
+        launchUrl(Uri(scheme: type, path: data));
+      } else if (type == 'whatsapp') {
+        launchUrlString('http://wa.me//+91$data');
+      }
+    } catch (e) {
+      Common().showToast('Failed to launch');
+    }
   }
 
   @override
@@ -271,7 +287,7 @@ class _LeaderViewPropertyDetailScreenState
                                           Uri(
                                               scheme: 'tel',
                                               path:
-                                                  '${authorizedPersons![index]['agent_mobile']}'),
+                                                  '${authorizedPersons?[index]?['agent_mobile'] ?? ''}'),
                                         );
                                       },
                                 icon: Image.asset(
@@ -469,60 +485,109 @@ class _LeaderViewPropertyDetailScreenState
                                           color: Colors.grey, fontSize: 11),
                                     ),
                                   )
-                                : Column(
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Customer Name : ${agentEntries?[0]?['name'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
+                                      SizedBox(
+                                        width: screenWidth * 0.7,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Customer Name : ${agentEntries?[0]?['name'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Customer Mobile Number : ${agentEntries?[0]?['mobile'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Unit no: ${agentEntries?[0]?['unit_no'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Block name: ${agentEntries?[0]?['block_name'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Phase name: ${agentEntries?[0]?['phases'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Call / Vist : ${agentEntries?[0]?['is_sourceby'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Comments : ${agentEntries?[0]?['agent_remind_comments'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Entry Date : ${_formatDate1(agentEntries?[0]?['enquired_at'] ?? '')}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Reminder Date : ${_formatDate(agentEntries?[0]?['agent_remind_date'] ?? '')}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                            Text(
+                                              'Status : ${agentEntries?[0]?['status'] ?? ''}',
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                            const VerticalSpace(height: 5),
+                                          ],
+                                        ),
                                       ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Customer Mobile Number : ${agentEntries?[0]?['mobile'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Unit no: ${agentEntries?[0]?['unit_no'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Block name: ${agentEntries?[0]?['block_name'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Phase name: ${agentEntries?[0]?['phases'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Call / Vist : ${agentEntries?[0]?['is_sourceby'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Comments : ${agentEntries?[0]?['agent_remind_comments'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Entry Date : ${_formatDate1(agentEntries?[0]?['enquired_at'] ?? '')}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Reminder Date : ${_formatDate(agentEntries?[0]?['agent_remind_date'] ?? '')}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
-                                      Text(
-                                        'Status : ${agentEntries?[0]?['status'] ?? ''}',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const VerticalSpace(height: 5),
+                                      Column(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              _goToCorrespondingApp(
+                                                  'tel',
+                                                  agentEntries?[0]?['mobile'] ??
+                                                      '');
+                                            },
+                                            icon: Image.asset(
+                                              'assets/images/phone.png',
+                                              height: 28,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              _goToCorrespondingApp(
+                                                  'whatsapp',
+                                                  agentEntries?[0]?['mobile'] ??
+                                                      '');
+                                            },
+                                            icon: Image.asset(
+                                              'assets/images/whatsapp.png',
+                                              height: 28,
+                                            ),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                           ),

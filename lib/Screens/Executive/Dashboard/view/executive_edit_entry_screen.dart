@@ -131,7 +131,7 @@ class _ExecutiveEditEntryScreenState extends State<ExecutiveEditEntryScreen> {
           "comments": _commentsController.text,
           "reminder_date": _formatDate1(_reminderController.text)
         };
-
+        print(data);
         if (!context.mounted) {
           return;
         }
@@ -234,9 +234,6 @@ class _ExecutiveEditEntryScreenState extends State<ExecutiveEditEntryScreen> {
                           if (value.toString().trim().isEmpty ||
                               value == null) {
                             return 'Enter name';
-                          } else if (!nameRegex
-                              .hasMatch(value.toString().trim())) {
-                            return 'Invalid name';
                           } else {
                             return null;
                           }

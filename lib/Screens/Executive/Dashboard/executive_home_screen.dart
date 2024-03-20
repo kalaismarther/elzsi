@@ -23,6 +23,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:new_version_plus/new_version_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ExecutiveHomeScreen extends StatefulWidget {
   const ExecutiveHomeScreen({super.key});
@@ -48,7 +50,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
   @override
   void initState() {
     _home = _homeContent();
-
+    _checkUpdate();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -83,6 +85,76 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
       "title": "Profile",
     },
   ];
+
+  Future<void> _checkUpdate() async {
+    final newVersion = NewVersionPlus(androidId: 'com.smart.elzsimanager');
+    final status = await newVersion.getVersionStatus();
+
+    try {
+      if (status != null) {
+        if (status.canUpdate) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => PopScope(
+                    canPop: false,
+                    child: AlertDialog(
+                      title: Row(
+                        children: [
+                          Platform.isIOS
+                              ? Image.asset(
+                                  'assets/images/appstore.png',
+                                  height: 26,
+                                )
+                              : Image.asset(
+                                  'assets/images/playstore.png',
+                                  height: 26,
+                                ),
+                          const HorizontalSpace(width: 10),
+                          const Text(
+                            'Update Available',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1),
+                          ),
+                        ],
+                      ),
+                      content: Platform.isIOS
+                          ? const Text(
+                              'New version of Elzsi Task Manager is now available on App Store. Please update it')
+                          : const Text(
+                              'New version of Elzsi Task Manager is now available on Play Store. Please update it'),
+                      actions: [
+                        // TextButton(
+                        //   onPressed: () {
+                        //     Nav().pop(context);
+                        //   },
+                        //   child: const Text('Cancel'),
+                        // ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10)),
+                          onPressed: () {
+                            try {
+                              launchUrlString(
+                                  'https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
+                            } catch (e) {
+                              Common().showToast('Failed to launch');
+                            }
+                          },
+                          child: const Text('Update'),
+                        ),
+                      ],
+                    ),
+                  ));
+        } else {}
+      }
+    } catch (e) {
+      Common().showToast('Failed to get update');
+    }
+  }
 
   Future<void> _homeContent() async {
     await FirebaseMessaging.instance.requestPermission(

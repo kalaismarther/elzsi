@@ -737,49 +737,59 @@ class _ExecutiveViewPropertyDetailScreenState
                                                     fontSize: 12),
                                               ),
                                               const VerticalSpace(height: 5),
+                                              // Text(
+                                              //   'Source : ${agentEntries?[0]?['enquiry_by'] ?? ''}',
+                                              //   style: const TextStyle(
+                                              //       fontSize: 12),
+                                              // ),
+                                              // const VerticalSpace(height: 5),
                                             ],
                                           ),
                                         ),
-                                        agentEntries?[0]?['unit_id'] == null ||
-                                                agentEntries?[0]?['unit_id'] ==
-                                                    0 ||
-                                                agentEntries?[0]?['unit_status']
-                                                        .toString()
-                                                        .trim() ==
-                                                    'REQUESTED' ||
-                                                agentEntries?[0]?['unit_status']
-                                                        .toString()
-                                                        .trim() ==
-                                                    'AVAILABLE'
-                                            ? Column(
-                                                children: [
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      _goToCorrespondingApp(
-                                                          'tel',
-                                                          agentEntries?[0]
-                                                                  ?['mobile'] ??
-                                                              '');
-                                                    },
-                                                    icon: Image.asset(
-                                                      'assets/images/phone.png',
-                                                      height: 28,
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      _goToCorrespondingApp(
-                                                          'whatsapp',
-                                                          agentEntries?[0]
-                                                                  ?['mobile'] ??
-                                                              '');
-                                                    },
-                                                    icon: Image.asset(
-                                                      'assets/images/whatsapp.png',
-                                                      height: 28,
-                                                    ),
-                                                  ),
-                                                  IconButton(
+                                        Column(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                _goToCorrespondingApp(
+                                                    'tel',
+                                                    agentEntries?[0]
+                                                            ?['mobile'] ??
+                                                        '');
+                                              },
+                                              icon: Image.asset(
+                                                'assets/images/phone.png',
+                                                height: 28,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                _goToCorrespondingApp(
+                                                    'whatsapp',
+                                                    agentEntries?[0]
+                                                            ?['mobile'] ??
+                                                        '');
+                                              },
+                                              icon: Image.asset(
+                                                'assets/images/whatsapp.png',
+                                                height: 28,
+                                              ),
+                                            ),
+                                            agentEntries?[0]?['unit_id'] ==
+                                                        null ||
+                                                    agentEntries?[0]
+                                                            ?['unit_id'] ==
+                                                        0 ||
+                                                    agentEntries?[0]
+                                                                ?['unit_status']
+                                                            .toString()
+                                                            .trim() ==
+                                                        'REQUESTED' ||
+                                                    agentEntries?[0]
+                                                                ?['unit_status']
+                                                            .toString()
+                                                            .trim() ==
+                                                        'AVAILABLE'
+                                                ? IconButton(
                                                     onPressed: () async {
                                                       await Nav().push(
                                                           context,
@@ -799,10 +809,11 @@ class _ExecutiveViewPropertyDetailScreenState
                                                       'assets/images/edit.png',
                                                       height: 28,
                                                     ),
-                                                  ),
-                                                ],
-                                              )
-                                            : const VerticalSpace(height: 0)
+                                                  )
+                                                : const VerticalSpace(
+                                                    height: 0),
+                                          ],
+                                        )
                                       ],
                                     ),
                             ),

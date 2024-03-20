@@ -335,10 +335,12 @@ class _ExecutiveUpdateProfileScreenState
 
         var response = await request.send();
         var responseBody = await response.stream.bytesToString();
-
+        print(json.decode(responseBody));
         var result = json.decode(responseBody);
+        print(result);
 
         if (result['status'].toString() == '1') {
+          print(result);
           DatabaseHelper().insertDb(UserModel(
               userId: result['data']['id'],
               deviceId: widget.deviceId,

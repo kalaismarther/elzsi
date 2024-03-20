@@ -99,9 +99,18 @@ class _UnitsState extends State<Units> {
                                           ?['phase_name'] ??
                                       ''),
                                   const VerticalSpace(height: 5),
-                                  Text(widget.projectUnits[index]
-                                          ?['unit_status'] ??
-                                      ''),
+                                  Text(
+                                    widget.projectUnits[index]
+                                            ?['unit_status'] ??
+                                        '',
+                                    style: TextStyle(
+                                        color: widget.projectUnits[index]
+                                                        ?['unit_status']
+                                                    ?.toString() ==
+                                                'AVAILABLE'
+                                            ? Colors.red
+                                            : Colors.black),
+                                  ),
                                 ],
                               ),
                             ],

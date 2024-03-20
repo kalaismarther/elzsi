@@ -2109,6 +2109,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         var responseBody = await response.stream.bytesToString();
 
         var result = json.decode(responseBody);
+        print(json.decode(responseBody));
 
         if (result['status'].toString() == '1') {
           setState(() {
@@ -2158,7 +2159,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         workingType = profileInfo?['work_position'] ?? 0;
         _nameController.text = profileInfo?['name'] ?? '';
         _emailController.text = profileInfo?['email'] ?? '';
-        _mobileController.text = profileInfo?['mobile'] ?? '';
+        _mobileController.text = profileInfo?['mobile']?.toString() ?? '';
         _dobController.text = _formatDate(profileInfo?['dob'] ?? '');
         _genderController.text = profileInfo?['gender'] ?? '';
         _addressController.text = profileInfo?['address'] ?? '';
@@ -2217,8 +2218,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
               profileInfo!['existing_sellers']?[i]?['business_name'] ?? '';
           existingControllers[i][1].text =
               profileInfo!['existing_sellers']?[i]?['person_name'] ?? '';
-          existingControllers[i][2].text =
-              profileInfo!['existing_sellers']?[i]?['contact_number'] ?? '';
+          existingControllers[i][2].text = profileInfo!['existing_sellers']?[i]
+                      ?['contact_number']
+                  ?.toString() ??
+              '';
           existingControllers[i][3].text = profileInfo!['existing_sellers']?[i]
                       ?['since_yrmonth']
                   ?.toString()
@@ -2229,10 +2232,14 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                   ?.toString()
                   .replaceAll('-', '/') ??
               '';
-          existingControllers[i][5].text =
-              profileInfo!['existing_sellers']?[i]?['handled_projects'] ?? '';
-          existingControllers[i][6].text =
-              profileInfo!['existing_sellers']?[i]?['position_held'] ?? '';
+          existingControllers[i][5].text = profileInfo!['existing_sellers']?[i]
+                      ?['handled_projects']
+                  ?.toString() ??
+              '';
+          existingControllers[i][6].text = profileInfo!['existing_sellers']?[i]
+                      ?['position_held']
+                  ?.toString() ??
+              '';
         }
         centerLoading = false;
       });
@@ -2300,7 +2307,6 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         Common().showToast(result['message']);
       }
     } catch (e) {
-      print(e);
       if (!context.mounted) {
         return;
       }
