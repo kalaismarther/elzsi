@@ -664,7 +664,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
         body: Container(
           height: screenHeight,
           width: screenWidth,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: EdgeInsets.symmetric(horizontal: Platform.isIOS ? 20 : 15),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(

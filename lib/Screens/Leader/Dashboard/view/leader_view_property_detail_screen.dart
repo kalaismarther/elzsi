@@ -528,7 +528,7 @@ class _LeaderViewPropertyDetailScreenState
                                             ),
                                             const VerticalSpace(height: 5),
                                             Text(
-                                              'Call / Vist : ${agentEntries?[0]?['is_sourceby'] ?? ''}',
+                                              'Call / Visit : ${agentEntries?[0]?['is_sourceby'] ?? ''}',
                                               style:
                                                   const TextStyle(fontSize: 12),
                                             ),

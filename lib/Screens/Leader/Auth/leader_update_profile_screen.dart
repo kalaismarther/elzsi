@@ -76,9 +76,9 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
   final _yearsOfExperienceController = TextEditingController();
 
   //EXECUTIVE TYPE
-  int workingType = 1;
+  int workingType = 5;
 
-  //ADDRESS INFO
+  //ADDRESS INFOs
   Map? selectedPincode;
   Map? selectedArea;
 
@@ -394,7 +394,8 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
               ),
               const SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding:
+                    EdgeInsets.symmetric(horizontal: Platform.isIOS ? 20 : 15),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -1341,7 +1342,7 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                           ),
                         ),
                       ),
-                      const VerticalSpace(height: 20),
+                      VerticalSpace(height: Platform.isIOS ? 32 : 20),
                     ],
                   ),
                 ),

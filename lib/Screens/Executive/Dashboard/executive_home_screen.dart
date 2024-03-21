@@ -87,8 +87,11 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
   ];
 
   Future<void> _checkUpdate() async {
-    final newVersion = NewVersionPlus(androidId: 'com.smart.elzsimanager');
+    final newVersion = NewVersionPlus(
+        androidId: 'com.smart.elzsimanager', iOSId: 'com.smart.elzsimanager');
     final status = await newVersion.getVersionStatus();
+
+    print(status);
 
     try {
       if (status != null) {
@@ -126,20 +129,20 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                           : const Text(
                               'New version of Elzsi Task Manager is now available on Play Store. Please update it'),
                       actions: [
-                        // TextButton(
-                        //   onPressed: () {
-                        //     Nav().pop(context);
-                        //   },
-                        //   child: const Text('Cancel'),
-                        // ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10)),
                           onPressed: () {
                             try {
-                              launchUrlString(
-                                  'https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
+                              if (Platform.isIOS) {
+                                Nav().pop(context);
+                                Common()
+                                    .showToast('Will launch soon on App Store');
+                              } else {
+                                launchUrlString(
+                                    'https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
+                              }
                             } catch (e) {
                               Common().showToast('Failed to launch');
                             }
@@ -149,7 +152,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                       ],
                     ),
                   ));
-        } else {}
+        }
       }
     } catch (e) {
       Common().showToast('Failed to get update');
@@ -201,8 +204,6 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
       "device_id": userInfo.deviceId,
       "device_type": Platform.isAndroid ? "ANDROID" : "IOS"
     };
-
-    print('hhhhhhh $data');
 
     try {
       final result = await Api().homeContent(data, userInfo.token, context);

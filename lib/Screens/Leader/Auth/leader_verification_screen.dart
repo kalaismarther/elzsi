@@ -173,12 +173,21 @@ class _LeaderVerificationScreenState extends State<LeaderVerificationScreen> {
 
   Future _getDeviceInfo() async {
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      var androidInfo = await deviceInfoPlugin.androidInfo;
 
-    var androidInfo = await deviceInfoPlugin.androidInfo;
-    var androidId = androidInfo.id;
-    setState(() {
-      thisDeviceId = androidId.toString();
-    });
+      var androidId = androidInfo.id;
+      setState(() {
+        thisDeviceId = androidId.toString();
+      });
+    } else {
+      var iosInfo = await deviceInfoPlugin.iosInfo;
+
+      var iosId = iosInfo.identifierForVendor;
+      setState(() {
+        thisDeviceId = iosId.toString();
+      });
+    }
   }
 
   @override

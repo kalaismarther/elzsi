@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elzsi/Api/api_call.dart';
 import 'package:elzsi/Database/database_helper.dart';
@@ -708,7 +710,7 @@ class _ExecutiveViewPropertyDetailScreenState
                                                 const VerticalSpace(height: 5),
                                               ],
                                               Text(
-                                                'Call / Vist : ${agentEntries?[0]?['is_sourceby'] ?? ''}',
+                                                'Call / Visit : ${agentEntries?[0]?['is_sourceby'] ?? ''}',
                                                 style: const TextStyle(
                                                     fontSize: 12),
                                               ),
@@ -881,7 +883,9 @@ class _ExecutiveViewPropertyDetailScreenState
           ),
         ),
         bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(15),
+          padding: Platform.isIOS
+              ? const EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 35)
+              : const EdgeInsets.all(15),
           color: Colors.white,
           width: double.infinity,
           child: ElevatedButton(

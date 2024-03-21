@@ -2431,7 +2431,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         body: Container(
           height: screenHeight,
           width: screenWidth,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: EdgeInsets.symmetric(horizontal: Platform.isIOS ? 20 : 15),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -4306,7 +4306,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                   ),
                                 ),
                               ),
-                              const VerticalSpace(height: 20)
+                              VerticalSpace(height: Platform.isIOS ? 32 : 20),
                             ],
                           ),
                         ),

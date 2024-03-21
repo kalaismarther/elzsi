@@ -398,7 +398,8 @@ class _ExecutiveUpdateProfileScreenState
               ),
               const SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding:
+                    EdgeInsets.symmetric(horizontal: Platform.isIOS ? 20 : 15),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -1385,7 +1386,7 @@ class _ExecutiveUpdateProfileScreenState
                           ),
                         ),
                       ),
-                      const VerticalSpace(height: 20),
+                      VerticalSpace(height: Platform.isIOS ? 32 : 20),
                     ],
                   ),
                 ),
