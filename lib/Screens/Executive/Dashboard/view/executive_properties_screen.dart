@@ -12,8 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ExecutivePropertiesScreen extends StatefulWidget {
-  const ExecutivePropertiesScreen({super.key});
+  const ExecutivePropertiesScreen({super.key, required this.reloadHomeContent});
 
+  final Function() reloadHomeContent;
   @override
   State<ExecutivePropertiesScreen> createState() =>
       _ExecutivePropertiesScreenState();
@@ -88,184 +89,194 @@ class _ExecutivePropertiesScreenState extends State<ExecutivePropertiesScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      backgroundColor: primaryColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () {
-            Nav().pop(context);
-          },
-          child: Row(
-            children: [
-              const HorizontalSpace(width: 7),
-              Image.asset(
-                'assets/images/prev.png',
-                height: 15,
-              ),
-              const HorizontalSpace(width: 15),
-              const Text(
-                'Properties',
-                style: TextStyle(color: Colors.white, fontSize: 17.5),
-              ),
-            ],
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        widget.reloadHomeContent();
+      },
+      child: Scaffold(
+        backgroundColor: primaryColor,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () {
+              Nav().pop(context);
+              widget.reloadHomeContent();
+            },
+            child: Row(
+              children: [
+                const HorizontalSpace(width: 7),
+                Image.asset(
+                  'assets/images/prev.png',
+                  height: 15,
+                ),
+                const HorizontalSpace(width: 15),
+                const Text(
+                  'Properties',
+                  style: TextStyle(color: Colors.white, fontSize: 17.5),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Container(
-        height: screenHeight,
-        width: screenWidth,
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(13),
-            topRight: Radius.circular(13),
+        body: Container(
+          height: screenHeight,
+          width: screenWidth,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(13),
+              topRight: Radius.circular(13),
+            ),
           ),
-        ),
-        child: FutureBuilder(
-          future: _linkedProjectsList,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Column(
-                children: [
-                  SizedBox(
-                    height: 15,
-                  ),
-                  WaitingShimmer(count: 2, height: 105),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return const Center(child: Text('Failed to fetch data'));
-            } else {
-              return propertiesList.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No properties found',
-                        style: TextStyle(color: Colors.grey, fontSize: 11),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          ListView.builder(
-                            itemCount: propertiesList.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) => InkWell(
-                              onTap: () {
-                                Nav().push(
-                                    context,
-                                    ExecutiveViewPropertyDetailScreen(
-                                        projectNo: propertiesList[index]
-                                            ['id']));
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 15),
-                                padding: const EdgeInsets.all(8.5),
-                                decoration: BoxDecoration(
-                                  color: inputBg,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: inputBorder),
-                                ),
-                                child: Row(
-                                  children: [
-                                    CachedNetworkImage(
-                                      imageUrl: propertiesList[index]
-                                          ['is_project_image'],
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        height: 80,
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      placeholder: (context, url) => Container(
-                                        height: 80,
-                                        width: 80,
-                                        decoration: BoxDecoration(
+          child: FutureBuilder(
+            future: _linkedProjectsList,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Column(
+                  children: [
+                    SizedBox(
+                      height: 15,
+                    ),
+                    WaitingShimmer(count: 2, height: 105),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Failed to fetch data'));
+              } else {
+                return propertiesList.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No properties found',
+                          style: TextStyle(color: Colors.grey, fontSize: 11),
+                        ),
+                      )
+                    : SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            ListView.builder(
+                              itemCount: propertiesList.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) => InkWell(
+                                onTap: () {
+                                  Nav().push(
+                                      context,
+                                      ExecutiveViewPropertyDetailScreen(
+                                        projectNo: propertiesList[index]['id'],
+                                        reloadHomeContent: () {},
+                                      ));
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 15),
+                                  padding: const EdgeInsets.all(8.5),
+                                  decoration: BoxDecoration(
+                                    color: inputBg,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: inputBorder),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl: propertiesList[index]
+                                            ['is_project_image'],
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          height: 80,
+                                          width: 80,
+                                          decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: Shimmer.fromColors(
-                                          baseColor: const Color(0xFFE2E2E2),
-                                          highlightColor: Colors.grey.shade50,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  169, 226, 226, 226),
-                                              borderRadius:
-                                                  BorderRadius.circular(13),
+                                                BorderRadius.circular(8),
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                    ),
-                                    const HorizontalSpace(width: 17.5),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          propertiesList[index]
-                                                  ?['project_name'] ??
-                                              '',
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          height: 80,
+                                          width: 80,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Shimmer.fromColors(
+                                            baseColor: const Color(0xFFE2E2E2),
+                                            highlightColor: Colors.grey.shade50,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    169, 226, 226, 226),
+                                                borderRadius:
+                                                    BorderRadius.circular(13),
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        const VerticalSpace(height: 6),
-                                        SizedBox(
-                                          width: screenWidth * 0.6,
-                                          child: Text(
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                      const HorizontalSpace(width: 17.5),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
                                             propertiesList[index]
-                                                    ?['location'] ??
+                                                    ?['project_name'] ??
                                                 '',
-                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const VerticalSpace(height: 6),
+                                          SizedBox(
+                                            width: screenWidth * 0.6,
+                                            child: Text(
+                                              propertiesList[index]
+                                                      ?['location'] ??
+                                                  '',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontSize: 12.5),
+                                            ),
+                                          ),
+                                          const VerticalSpace(height: 6),
+                                          Text(
+                                            'Total Units : ${propertiesList[index]?['no_of_units'] ?? ''}',
                                             style:
                                                 const TextStyle(fontSize: 12.5),
                                           ),
-                                        ),
-                                        const VerticalSpace(height: 6),
-                                        Text(
-                                          'Total Units : ${propertiesList[index]?['no_of_units'] ?? ''}',
-                                          style:
-                                              const TextStyle(fontSize: 12.5),
-                                        ),
-                                      ],
-                                    )
-                                  ],
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          paginationLoader
-                              ? const Padding(
-                                  padding: EdgeInsets.only(top: 5),
-                                  child: Loader(),
-                                )
-                              : const VerticalSpace(height: 0),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      ),
-                    );
-            }
-          },
+                            paginationLoader
+                                ? const Padding(
+                                    padding: EdgeInsets.only(top: 5),
+                                    child: Loader(),
+                                  )
+                                : const VerticalSpace(height: 0),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      );
+              }
+            },
+          ),
         ),
       ),
     );

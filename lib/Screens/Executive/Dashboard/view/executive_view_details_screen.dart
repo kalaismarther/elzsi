@@ -240,8 +240,10 @@ class _ExecutiveViewDetailsScreenState
                                 Nav().push(
                                     context,
                                     ExecutiveViewPropertyDetailScreen(
-                                        projectNo: linkedSellerProjects[index]
-                                            ['id']));
+                                      projectNo: linkedSellerProjects[index]
+                                          ['id'],
+                                      reloadHomeContent: () {},
+                                    ));
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 15),

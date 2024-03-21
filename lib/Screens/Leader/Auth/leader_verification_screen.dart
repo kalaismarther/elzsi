@@ -116,6 +116,7 @@ class _LeaderVerificationScreenState extends State<LeaderVerificationScreen> {
         final result = await Api().verifyOtp(data);
 
         if (result['status'].toString() == '1') {
+          await pref.remove('executiveLogin');
           DatabaseHelper().insertDb(UserModel(
               userId: result['data']['id'],
               deviceId: thisDeviceId,

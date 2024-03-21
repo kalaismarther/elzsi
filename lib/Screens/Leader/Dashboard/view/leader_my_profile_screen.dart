@@ -24,8 +24,9 @@ import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class LeaderMyProfileScreen extends StatefulWidget {
-  const LeaderMyProfileScreen({super.key});
+  const LeaderMyProfileScreen({super.key, required this.reloadHomeContent});
 
+  final Function() reloadHomeContent;
   @override
   State<LeaderMyProfileScreen> createState() => _LeaderMyProfileScreenState();
 }
@@ -65,7 +66,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
   final _yearsOfExperienceController = TextEditingController();
 
   //EXECUTIVE TYPE
-  int workingType = 1;
+  int workingType = 5;
 
   //ADDRESS INFO
   Map? selectedPincode;
@@ -388,7 +389,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
     if (result['status'].toString() == '1') {
       setState(() {
         profileInfo = result['data'];
-        workingType = profileInfo?['work_position'] ?? 0;
+        workingType = profileInfo?['work_position'] ?? 5;
         _nameController.text = profileInfo?['name'] ?? '';
         _emailController.text = profileInfo?['email'] ?? '';
         _mobileController.text = profileInfo?['mobile']?.toString() ?? '';
@@ -631,6 +632,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
       canPop: isLoading ? false : true,
       onPopInvoked: (didPop) {
         if (didPop) {
+          widget.reloadHomeContent();
           return;
         }
         Common().showToast('Please wait. Profile is updating');
@@ -644,6 +646,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
+              widget.reloadHomeContent();
             },
             child: Row(
               children: [

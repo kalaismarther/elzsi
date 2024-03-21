@@ -120,6 +120,7 @@ class _ExecutiveVerificationScreenState
         print(result);
 
         if (result['status'].toString() == '1') {
+          await pref.remove('leaderLogin');
           await DatabaseHelper().insertDb(UserModel(
               userId: result['data']['id'],
               deviceId: thisDeviceId,

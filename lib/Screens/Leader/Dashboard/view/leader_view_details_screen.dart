@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elzsi/Api/api_call.dart';
 import 'package:elzsi/Database/database_helper.dart';
+import 'package:elzsi/Screens/Leader/Dashboard/view/leader_view_property_detail_screen.dart';
 import 'package:elzsi/Utils/colors.dart';
 import 'package:elzsi/Utils/horizontalspace.dart';
 import 'package:elzsi/Utils/loader.dart';
@@ -60,13 +61,14 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
       "seller_id": widget.data['id'],
       "page_no": linkedSellerProjects.length
     };
-
+    print(data);
     if (!context.mounted) {
       return;
     }
 
     final result =
         await Api().getLinkedSellerProjects(data, userInfo.token, context);
+    print(result);
 
     if (result['status'].toString() == '1') {
       setState(() {
@@ -229,11 +231,13 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) => InkWell(
                               onTap: () {
-                                // Nav().push(
-                                //     context,
-                                //     ExecutiveViewPropertyDetailScreen(
-                                //         projectNo: linkedSellerProjects[index]
-                                //             ['id']));
+                                Nav().push(
+                                    context,
+                                    LeaderViewPropertyDetailScreen(
+                                      projectNo: linkedSellerProjects[index]
+                                          ['id'],
+                                      reloadHomeContent: () {},
+                                    ));
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 15),

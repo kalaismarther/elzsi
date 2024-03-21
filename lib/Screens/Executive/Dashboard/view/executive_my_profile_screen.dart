@@ -1790,8 +1790,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ExecutiveMyProfileScreen extends StatefulWidget {
-  const ExecutiveMyProfileScreen({super.key});
+  const ExecutiveMyProfileScreen({super.key, required this.reloadHomeContent});
 
+  final Function() reloadHomeContent;
   @override
   State<ExecutiveMyProfileScreen> createState() =>
       _ExecutiveMyProfileScreenState();
@@ -2156,7 +2157,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
     if (result['status'].toString() == '1') {
       setState(() {
         profileInfo = result['data'];
-        workingType = profileInfo?['work_position'] ?? 0;
+        workingType = profileInfo?['work_position'] ?? 1;
         _nameController.text = profileInfo?['name'] ?? '';
         _emailController.text = profileInfo?['email'] ?? '';
         _mobileController.text = profileInfo?['mobile']?.toString() ?? '';
@@ -2398,6 +2399,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
       canPop: isLoading ? false : true,
       onPopInvoked: (didPop) {
         if (didPop) {
+          widget.reloadHomeContent();
           return;
         }
         Common().showToast('Please wait. Profile is updating');
@@ -2411,6 +2413,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
+              widget.reloadHomeContent();
             },
             child: Row(
               children: [

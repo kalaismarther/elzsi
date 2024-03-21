@@ -133,21 +133,59 @@ class _LeaderAgentEntriesScreenState extends State<LeaderAgentEntriesScreen> {
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                   const VerticalSpace(height: 5),
-                                  Text(
-                                    'Unit no : ${widget.agentEntriesList[index]?['unit_no'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  Text(
-                                    'Block name: ${widget.agentEntriesList[index]?['block_name'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  Text(
-                                    'Phase name: ${widget.agentEntriesList[index]?['phases'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
+                                  if (widget.agentEntriesList[index]
+                                              ?['unit_no'] !=
+                                          null &&
+                                      widget.agentEntriesList[index]
+                                              ?['unit_id'] !=
+                                          0) ...[
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Unit no : ${widget.agentEntriesList[index]?['unit_no'] ?? ''} - ',
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                        Text(
+                                          widget.agentEntriesList[index]
+                                                  ?['unit_status'] ??
+                                              '',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: widget.agentEntriesList[
+                                                              index]
+                                                              ?['unit_status']
+                                                          ?.toString() ==
+                                                      'AVAILABLE'
+                                                  ? Colors.red
+                                                  : widget.agentEntriesList[
+                                                                  index]?[
+                                                                  'unit_status']
+                                                              ?.toString() ==
+                                                          'BOOKED'
+                                                      ? Colors.blue
+                                                      : widget.agentEntriesList[
+                                                                      index]?[
+                                                                      'unit_status']
+                                                                  ?.toString() ==
+                                                              'SOLD OUT'
+                                                          ? Colors.green
+                                                          : Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    Text(
+                                      'Block name: ${widget.agentEntriesList[index]?['block_name'] ?? ''}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    Text(
+                                      'Phase name: ${widget.agentEntriesList[index]?['phases'] ?? ''}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                  ],
                                   Text(
                                     'Call / Visit : ${widget.agentEntriesList[index]?['is_sourceby'] ?? ''}',
                                     style: const TextStyle(fontSize: 12),

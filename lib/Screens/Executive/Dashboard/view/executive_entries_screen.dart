@@ -199,7 +199,7 @@ class _ExecutiveEntriesScreenState extends State<ExecutiveEntriesScreen> {
                                       const VerticalSpace(height: 5),
                                     ],
                                     Text(
-                                      'Call / Vist : ${widget.agentEntriesList[index]?['is_sourceby'] ?? ''}',
+                                      'Call / Visit : ${widget.agentEntriesList[index]?['is_sourceby'] ?? ''}',
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                     const VerticalSpace(height: 5),

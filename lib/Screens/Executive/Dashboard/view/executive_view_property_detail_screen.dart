@@ -24,9 +24,11 @@ import 'package:url_launcher/url_launcher_string.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
 class ExecutiveViewPropertyDetailScreen extends StatefulWidget {
-  const ExecutiveViewPropertyDetailScreen({super.key, required this.projectNo});
+  const ExecutiveViewPropertyDetailScreen(
+      {super.key, required this.projectNo, required this.reloadHomeContent});
 
   final int projectNo;
+  final Function() reloadHomeContent;
 
   @override
   State<ExecutiveViewPropertyDetailScreen> createState() =>
@@ -119,39 +121,39 @@ class _ExecutiveViewPropertyDetailScreenState
   }
 
   //FUNCTION FOR EXITING FROM THIS SCREEN
-  void _goBack() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          'Save new entry',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        content: const Text(
-          'Entry detail won\'t be saved if you are not save the detail',
-          style: TextStyle(fontSize: 12),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Nav().pop(context);
-              Nav().pop(context);
-            },
-            child: const Text('Don\'t save'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            ),
-            onPressed: () {
-              Nav().pop(context);
-            },
-            child: const Text('OK'),
-          )
-        ],
-      ),
-    );
-  }
+  // void _goBack() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: const Text(
+  //         'Save new entry',
+  //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //       ),
+  //       content: const Text(
+  //         'Entry detail won\'t be saved if you are not save the detail',
+  //         style: TextStyle(fontSize: 12),
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () {
+  //             Nav().pop(context);
+  //             Nav().pop(context);
+  //           },
+  //           child: const Text('Don\'t save'),
+  //         ),
+  //         ElevatedButton(
+  //           style: ElevatedButton.styleFrom(
+  //             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+  //           ),
+  //           onPressed: () {
+  //             Nav().pop(context);
+  //           },
+  //           child: const Text('OK'),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Future _goToCorrespondingApp(String? type, String data) async {
     if (data.isEmpty || data == '') {
@@ -230,12 +232,9 @@ class _ExecutiveViewPropertyDetailScreenState
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return PopScope(
-      canPop: newEntry.isEmpty ? true : false,
+      canPop: true,
       onPopInvoked: (didPop) {
-        if (didPop) {
-          return;
-        }
-        _goBack();
+        widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -244,11 +243,10 @@ class _ExecutiveViewPropertyDetailScreenState
           title: InkWell(
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
-            onTap: newEntry.isEmpty
-                ? () {
-                    Nav().pop(context);
-                  }
-                : _goBack,
+            onTap: () {
+              Nav().pop(context);
+              widget.reloadHomeContent();
+            },
             child: Row(
               children: [
                 const HorizontalSpace(width: 7),

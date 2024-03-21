@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:elzsi/dependency_injection.dart';
 import 'package:get/get.dart';
+import 'package:upgrader/upgrader.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  await Upgrader.clearSavedSettings();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -73,7 +75,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const SplashScreen(),
+      home: UpgradeAlert(
+          dialogStyle: UpgradeDialogStyle.cupertino,
+          showIgnore: false,
+          showLater: false,
+          showReleaseNotes: false,
+          cupertinoButtonTextStyle: const TextStyle(color: Colors.blue),
+          upgrader: Upgrader(debugLogging: true),
+          child: const SplashScreen()),
     );
   }
 }

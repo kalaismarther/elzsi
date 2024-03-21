@@ -23,8 +23,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:new_version_plus/new_version_plus.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+// import 'package:new_version_plus/new_version_plus.dart';
+// import 'package:url_launcher/url_launcher_string.dart';
 
 class ExecutiveHomeScreen extends StatefulWidget {
   const ExecutiveHomeScreen({super.key});
@@ -50,7 +50,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
   @override
   void initState() {
     _home = _homeContent();
-    _checkUpdate();
+    // _checkUpdate();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -86,78 +86,78 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
     },
   ];
 
-  Future<void> _checkUpdate() async {
-    final newVersion = NewVersionPlus(
-        androidId: 'com.smart.elzsimanager', iOSId: 'com.smart.elzsimanager');
-    final status = await newVersion.getVersionStatus();
+  // Future<void> _checkUpdate() async {
+  //   final newVersion = NewVersionPlus(
+  //       androidId: 'com.smart.elzsimanager', iOSId: 'com.smart.elzsimanager');
+  //   final status = await newVersion.getVersionStatus();
 
-    print(status);
+  //   print(status);
 
-    try {
-      if (status != null) {
-        if (status.canUpdate) {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => PopScope(
-                    canPop: false,
-                    child: AlertDialog(
-                      title: Row(
-                        children: [
-                          Platform.isIOS
-                              ? Image.asset(
-                                  'assets/images/appstore.png',
-                                  height: 26,
-                                )
-                              : Image.asset(
-                                  'assets/images/playstore.png',
-                                  height: 26,
-                                ),
-                          const HorizontalSpace(width: 10),
-                          const Text(
-                            'Update Available',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1),
-                          ),
-                        ],
-                      ),
-                      content: Platform.isIOS
-                          ? const Text(
-                              'New version of Elzsi Task Manager is now available on App Store. Please update it')
-                          : const Text(
-                              'New version of Elzsi Task Manager is now available on Play Store. Please update it'),
-                      actions: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10)),
-                          onPressed: () {
-                            try {
-                              if (Platform.isIOS) {
-                                Nav().pop(context);
-                                Common()
-                                    .showToast('Will launch soon on App Store');
-                              } else {
-                                launchUrlString(
-                                    'https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
-                              }
-                            } catch (e) {
-                              Common().showToast('Failed to launch');
-                            }
-                          },
-                          child: const Text('Update'),
-                        ),
-                      ],
-                    ),
-                  ));
-        }
-      }
-    } catch (e) {
-      Common().showToast('Failed to get update');
-    }
-  }
+  //   try {
+  //     if (status != null) {
+  //       if (status.canUpdate) {
+  //         showDialog(
+  //             barrierDismissible: false,
+  //             context: context,
+  //             builder: (context) => PopScope(
+  //                   canPop: false,
+  //                   child: AlertDialog(
+  //                     title: Row(
+  //                       children: [
+  //                         Platform.isIOS
+  //                             ? Image.asset(
+  //                                 'assets/images/appstore.png',
+  //                                 height: 26,
+  //                               )
+  //                             : Image.asset(
+  //                                 'assets/images/playstore.png',
+  //                                 height: 26,
+  //                               ),
+  //                         const HorizontalSpace(width: 10),
+  //                         const Text(
+  //                           'Update Available',
+  //                           style: TextStyle(
+  //                               fontSize: 16,
+  //                               fontWeight: FontWeight.bold,
+  //                               letterSpacing: 1),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     content: Platform.isIOS
+  //                         ? const Text(
+  //                             'New version of Elzsi Task Manager is now available on App Store. Please update it')
+  //                         : const Text(
+  //                             'New version of Elzsi Task Manager is now available on Play Store. Please update it'),
+  //                     actions: [
+  //                       ElevatedButton(
+  //                         style: ElevatedButton.styleFrom(
+  //                             padding:
+  //                                 const EdgeInsets.symmetric(horizontal: 10)),
+  //                         onPressed: () {
+  //                           try {
+  //                             if (Platform.isIOS) {
+  //                               Nav().pop(context);
+  //                               Common()
+  //                                   .showToast('Will launch soon on App Store');
+  //                             } else {
+  //                               launchUrlString(
+  //                                   'https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
+  //                             }
+  //                           } catch (e) {
+  //                             Common().showToast('Failed to launch');
+  //                           }
+  //                         },
+  //                         child: const Text('Update'),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ));
+  //       }
+  //     }
+  //   } catch (e) {
+  //     Common().showToast('Failed to get update');
+  //   }
+  // }
 
   Future<void> _homeContent() async {
     await FirebaseMessaging.instance.requestPermission(
@@ -279,7 +279,11 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                 padding: const EdgeInsets.only(right: 10),
                 child: IconButton(
                   onPressed: () {
-                    Nav().push(context, const ExecutiveNotificationScreen());
+                    Nav().push(
+                        context,
+                        ExecutiveNotificationScreen(
+                          reloadHomeContent: _homeContent,
+                        ));
                   },
                   icon: Image.asset(
                     'assets/images/notification.png',
@@ -305,8 +309,11 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                       splashColor: Colors.transparent,
                       onTap: () {
                         Nav().pop(context);
-                        Nav()
-                            .push(context, const ExecutiveSelectSellerScreen());
+                        Nav().push(
+                            context,
+                            ExecutiveSelectSellerScreen(
+                              reloadHomeContent: _homeContent,
+                            ));
                       },
                       leading: Image.asset(
                         'assets/images/menu-select-seller.png',
@@ -332,7 +339,11 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                       splashColor: Colors.transparent,
                       onTap: () {
                         Nav().pop(context);
-                        Nav().push(context, const ExecutiveMySellerScreen());
+                        Nav().push(
+                            context,
+                            ExecutiveMySellerScreen(
+                              reloadHomeContent: _homeContent,
+                            ));
                       },
                       leading: Image.asset(
                         'assets/images/menu-my-seller.png',
@@ -358,7 +369,11 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                       splashColor: Colors.transparent,
                       onTap: () {
                         Nav().pop(context);
-                        Nav().push(context, const ExecutivePropertiesScreen());
+                        Nav().push(
+                            context,
+                            ExecutivePropertiesScreen(
+                              reloadHomeContent: _homeContent,
+                            ));
                       },
                       leading: Image.asset(
                         'assets/images/menu-properties.png',
@@ -384,7 +399,11 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                       splashColor: Colors.transparent,
                       onTap: () {
                         Nav().pop(context);
-                        Nav().push(context, const ExecutiveMyProfileScreen());
+                        Nav().push(
+                            context,
+                            ExecutiveMyProfileScreen(
+                              reloadHomeContent: _homeContent,
+                            ));
                       },
                       leading: Image.asset(
                         'assets/images/menu-profile.png',
@@ -434,7 +453,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                     child: ListTile(
                       onTap: () {
                         Share.share(
-                            'Check out Elzsi Task Manager on play store : https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
+                            'Check out Elzsi Task Manager App on \n\n Play Store : https://play.google.com/store/apps/details?id=com.smart.elzsimanager \n\n App Store : ');
                       },
                       leading: Image.asset(
                         'assets/images/share.png',
@@ -572,15 +591,27 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                       onTap: () {
                         index == 0
                             ? Nav().push(
-                                context, const ExecutiveSelectSellerScreen())
+                                context,
+                                ExecutiveSelectSellerScreen(
+                                  reloadHomeContent: _homeContent,
+                                ))
                             : index == 1
                                 ? Nav().push(
-                                    context, const ExecutiveMySellerScreen())
+                                    context,
+                                    ExecutiveMySellerScreen(
+                                      reloadHomeContent: _homeContent,
+                                    ))
                                 : index == 2
-                                    ? Nav().push(context,
-                                        const ExecutivePropertiesScreen())
-                                    : Nav().push(context,
-                                        const ExecutiveMyProfileScreen());
+                                    ? Nav().push(
+                                        context,
+                                        ExecutivePropertiesScreen(
+                                          reloadHomeContent: _homeContent,
+                                        ))
+                                    : Nav().push(
+                                        context,
+                                        ExecutiveMyProfileScreen(
+                                          reloadHomeContent: _homeContent,
+                                        ));
                       },
                       child: Container(
                         padding: EdgeInsets.only(top: screenWidth * 0.03),
@@ -644,8 +675,10 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                                     Nav().push(
                                         context,
                                         ExecutiveViewPropertyDetailScreen(
-                                            projectNo: recentProperties[index]
-                                                ['id']));
+                                          projectNo: recentProperties[index]
+                                              ['id'],
+                                          reloadHomeContent: _homeContent,
+                                        ));
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 15),
