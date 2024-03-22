@@ -100,7 +100,7 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
 
     if (result['status'].toString() == '1') {
       setState(() {
-        sellerList.addAll(result['data']);
+        sellerList.addAll(result?['data'] ?? []);
         isLoading = false;
         paginationLoader = false;
       });
@@ -114,6 +114,9 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
   }
 
   String changeDateFormat(String dateWithTime) {
+    if (dateWithTime.isEmpty) {
+      return '';
+    }
     DateTime inputDateTime = DateTime.parse(dateWithTime);
     String formattedDate = DateFormat('dd MMM, yyyy').format(inputDateTime);
     return formattedDate;
@@ -159,10 +162,10 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
             },
             child: Row(
               children: [
-                const HorizontalSpace(width: 7),
+                const HorizontalSpace(width: 9),
                 Image.asset(
                   'assets/images/prev.png',
-                  height: 15,
+                  height: 17,
                 ),
                 const HorizontalSpace(width: 15),
                 const Text(
@@ -370,8 +373,9 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            sellerList[index]['is_seller']
-                                                ['business_name'],
+                                            sellerList[index]?['is_seller']
+                                                    ?['business_name'] ??
+                                                '',
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 13),
@@ -379,7 +383,8 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
                                           const VerticalSpace(height: 3.5),
                                           Text(
                                             changeDateFormat(sellerList[index]
-                                                ['status_date']),
+                                                    ?['status_date'] ??
+                                                ''),
                                             style: TextStyle(
                                                 color: fontLightGrey,
                                                 fontSize: 11),
@@ -402,7 +407,7 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
                                               BorderRadius.circular(3.5),
                                         ),
                                         child: Text(
-                                          sellerList[index]['status'],
+                                          sellerList[index]?['status'] ?? '',
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
                                               color: Colors.white,

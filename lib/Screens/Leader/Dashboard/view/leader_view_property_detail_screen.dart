@@ -66,11 +66,17 @@ class _LeaderViewPropertyDetailScreenState
     if (result['status'].toString() == '1') {
       setState(() {
         // mySellers.addAll(result['data']);
-        thisPropertyDetail = result['data'];
-        authorizedPersons = result['data']['is_authorized_persons'];
-        units = result['data']['projectunits'];
-        agentUnits = result['data']['agentunits'];
-        agentEntries = result['data']['agententries'];
+        // thisPropertyDetail = result['data'];
+
+        // units = result['data']['projectunits'];
+        // agentUnits = result['data']['agentunits'];
+        // agentEntries = result['data']['agententries'];
+
+        thisPropertyDetail = result?['data'] ?? {};
+        authorizedPersons = result?['data']?['is_authorized_persons'] ?? [];
+        units = result?['data']?['projectunits'] ?? [];
+        agentUnits = result?['data']?['agentunits'] ?? [];
+        agentEntries = result?['data']?['agententries'] ?? [];
       });
     } else if (result['status'].toString() == '3') {
       throw Exception('Device changed');
@@ -133,10 +139,10 @@ class _LeaderViewPropertyDetailScreenState
             },
             child: Row(
               children: [
-                const HorizontalSpace(width: 7),
+                const HorizontalSpace(width: 9),
                 Image.asset(
                   'assets/images/prev.png',
-                  height: 15,
+                  height: 17,
                 ),
                 const HorizontalSpace(width: 15),
                 const Text(
@@ -222,7 +228,7 @@ class _LeaderViewPropertyDetailScreenState
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                thisPropertyDetail!['project_name'],
+                                thisPropertyDetail?['project_name'] ?? '',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               ),
@@ -232,7 +238,7 @@ class _LeaderViewPropertyDetailScreenState
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                thisPropertyDetail!['location'],
+                                thisPropertyDetail?['location'] ?? '',
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ),
@@ -241,7 +247,7 @@ class _LeaderViewPropertyDetailScreenState
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                'Total units : ${thisPropertyDetail!['no_of_units']}',
+                                'Total units : ${thisPropertyDetail?['no_of_units'] ?? ''}',
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ),
@@ -278,7 +284,7 @@ class _LeaderViewPropertyDetailScreenState
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Executive Name  :  ${authorizedPersons![index]?['agent_name'] ?? ''}',
+                                  'Executive Name  :  ${authorizedPersons?[index]?['agent_name'] ?? ''}',
                                   style: const TextStyle(
                                       fontSize: 14.5,
                                       fontWeight: FontWeight.bold),
@@ -333,8 +339,8 @@ class _LeaderViewPropertyDetailScreenState
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
-                                InkWell(
-                                  onTap: () {
+                                TextButton(
+                                  onPressed: () {
                                     Nav().push(
                                       context,
                                       LeaderAgentUnitsScreen(
@@ -351,7 +357,7 @@ class _LeaderViewPropertyDetailScreenState
                                 )
                               ],
                             ),
-                            const VerticalSpace(height: 7),
+                            // const VerticalSpace(height: 7),
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
@@ -458,9 +464,9 @@ class _LeaderViewPropertyDetailScreenState
                                       ],
                                     ),
                             ),
+                            const VerticalSpace(height: 20),
                           ],
                         ),
-                      const VerticalSpace(height: 20),
                       if (agentEntries != null && agentEntries!.isNotEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -474,13 +480,14 @@ class _LeaderViewPropertyDetailScreenState
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
-                                InkWell(
-                                  onTap: () {
+                                TextButton(
+                                  onPressed: () {
                                     Nav().push(
-                                        context,
-                                        LeaderAgentEntriesScreen(
-                                            agentEntriesList:
-                                                agentEntries ?? []));
+                                      context,
+                                      LeaderAgentEntriesScreen(
+                                        agentEntriesList: agentEntries ?? [],
+                                      ),
+                                    );
                                   },
                                   child: Text(
                                     'See All',
@@ -490,7 +497,7 @@ class _LeaderViewPropertyDetailScreenState
                                 )
                               ],
                             ),
-                            const VerticalSpace(height: 7),
+                            // const VerticalSpace(height: 7),
                             Container(
                               padding: const EdgeInsets.all(10),
                               width: double.infinity,

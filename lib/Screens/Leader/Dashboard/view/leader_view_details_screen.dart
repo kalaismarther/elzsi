@@ -72,7 +72,7 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
 
     if (result['status'].toString() == '1') {
       setState(() {
-        linkedSellerProjects.addAll(result['data']['projects']);
+        linkedSellerProjects.addAll(result?['data']?['projects'] ?? []);
       });
     } else if (result['status'].toString() == '3') {
       throw Exception('Device changed');
@@ -97,10 +97,10 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
           },
           child: Row(
             children: [
-              const HorizontalSpace(width: 7),
+              const HorizontalSpace(width: 9),
               Image.asset(
                 'assets/images/prev.png',
-                height: 15,
+                height: 17,
               ),
               const HorizontalSpace(width: 15),
               const Text(
@@ -181,7 +181,7 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        widget.data['business_name'],
+                        widget.data['business_name'] ?? '',
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
@@ -298,7 +298,8 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                                       children: [
                                         Text(
                                           linkedSellerProjects[index]
-                                              ['project_name'],
+                                                  ?['project_name'] ??
+                                              '',
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
@@ -308,7 +309,8 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                                           width: screenWidth * 0.6,
                                           child: Text(
                                             linkedSellerProjects[index]
-                                                ['location'],
+                                                    ?['location'] ??
+                                                '',
                                             overflow: TextOverflow.ellipsis,
                                             style:
                                                 const TextStyle(fontSize: 12.5),
@@ -316,7 +318,7 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                                         ),
                                         const VerticalSpace(height: 6),
                                         Text(
-                                          'Total Units : ${linkedSellerProjects[index]['no_of_units']}',
+                                          'Total Units : ${linkedSellerProjects[index]?['no_of_units'] ?? ''}',
                                           style:
                                               const TextStyle(fontSize: 12.5),
                                         ),

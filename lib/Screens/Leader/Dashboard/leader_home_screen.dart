@@ -626,6 +626,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                 children: [
                   const VerticalSpace(height: 15),
                   GridView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
                     shrinkWrap: true,
                     itemCount: homeGrid.length,
                     physics: const NeverScrollableScrollPhysics(),
@@ -792,7 +793,8 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                                           children: [
                                             Text(
                                               recentProperties[index]
-                                                  ['project_name'],
+                                                      ?['project_name'] ??
+                                                  '',
                                               style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
@@ -802,7 +804,8 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                                               width: screenWidth * 0.6,
                                               child: Text(
                                                 recentProperties[index]
-                                                    ['location'],
+                                                        ?['location'] ??
+                                                    '',
                                                 overflow: TextOverflow.clip,
                                                 style: const TextStyle(
                                                     fontSize: 12.5),
@@ -810,7 +813,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                                             ),
                                             const VerticalSpace(height: 6),
                                             Text(
-                                              'Total Units : ${recentProperties[index]['no_of_units']}',
+                                              'Total Units : ${recentProperties[index]?['no_of_units'] ?? ''}',
                                               style: const TextStyle(
                                                   fontSize: 12.5),
                                             ),

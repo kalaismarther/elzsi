@@ -107,10 +107,10 @@ class _ExecutiveNotificationScreenState
             },
             child: Row(
               children: [
-                const HorizontalSpace(width: 7),
+                const HorizontalSpace(width: 9),
                 Image.asset(
                   'assets/images/prev.png',
-                  height: 15,
+                  height: 17,
                 ),
                 const HorizontalSpace(width: 15),
                 const Text(

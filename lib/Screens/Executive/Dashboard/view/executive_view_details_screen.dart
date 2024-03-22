@@ -76,7 +76,7 @@ class _ExecutiveViewDetailsScreenState
 
     if (result['status'].toString() == '1') {
       setState(() {
-        linkedSellerProjects.addAll(result['data']['projects']);
+        linkedSellerProjects.addAll(result?['data']?['projects'] ?? []);
         paginationLoader = false;
       });
     } else if (result['status'].toString() == '3') {
@@ -107,10 +107,10 @@ class _ExecutiveViewDetailsScreenState
           },
           child: Row(
             children: [
-              const HorizontalSpace(width: 7),
+              const HorizontalSpace(width: 9),
               Image.asset(
                 'assets/images/prev.png',
-                height: 15,
+                height: 17,
               ),
               const HorizontalSpace(width: 15),
               const Text(
@@ -304,7 +304,8 @@ class _ExecutiveViewDetailsScreenState
                                       children: [
                                         Text(
                                           linkedSellerProjects[index]
-                                              ['project_name'],
+                                                  ?['project_name'] ??
+                                              '',
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
@@ -314,7 +315,8 @@ class _ExecutiveViewDetailsScreenState
                                           width: screenWidth * 0.6,
                                           child: Text(
                                             linkedSellerProjects[index]
-                                                ['location'],
+                                                    ?['location'] ??
+                                                '',
                                             overflow: TextOverflow.ellipsis,
                                             style:
                                                 const TextStyle(fontSize: 12.5),
@@ -322,7 +324,7 @@ class _ExecutiveViewDetailsScreenState
                                         ),
                                         const VerticalSpace(height: 6),
                                         Text(
-                                          'Total Units : ${linkedSellerProjects[index]['no_of_units']}',
+                                          'Total Units : ${linkedSellerProjects[index]?['no_of_units'] ?? ''}',
                                           style:
                                               const TextStyle(fontSize: 12.5),
                                         ),

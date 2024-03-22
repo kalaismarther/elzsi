@@ -84,7 +84,7 @@ class _ExecutiveSelectSellerScreenState
 
     if (result['status'].toString() == '1') {
       setState(() {
-        requestedSellerList.addAll(result['data']);
+        requestedSellerList.addAll(result?['data'] ?? []);
         isLoading = false;
         paginationLoader = false;
       });
@@ -100,6 +100,9 @@ class _ExecutiveSelectSellerScreenState
 
   //FUNCTION FOR CHANGING DATE FORMAT
   String changeDateFormat(String dateWithTime) {
+    if (dateWithTime.isEmpty) {
+      return '';
+    }
     DateTime inputDateTime = DateTime.parse(dateWithTime);
     String formattedDate = DateFormat('dd MMM, yyyy').format(inputDateTime);
     return formattedDate;
@@ -178,10 +181,10 @@ class _ExecutiveSelectSellerScreenState
             },
             child: Row(
               children: [
-                const HorizontalSpace(width: 7),
+                const HorizontalSpace(width: 9),
                 Image.asset(
                   'assets/images/prev.png',
-                  height: 15,
+                  height: 17,
                 ),
                 const HorizontalSpace(width: 15),
                 const Text(
@@ -375,7 +378,9 @@ class _ExecutiveSelectSellerScreenState
                                         children: [
                                           Text(
                                             requestedSellerList[index]
-                                                ['is_seller']['business_name'],
+                                                        ?['is_seller']
+                                                    ?['business_name'] ??
+                                                '',
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 13),
@@ -384,7 +389,8 @@ class _ExecutiveSelectSellerScreenState
                                           Text(
                                             changeDateFormat(
                                                 requestedSellerList[index]
-                                                    ['status_date']),
+                                                        ?['status_date'] ??
+                                                    ''),
                                             style: TextStyle(
                                                 color: fontLightGrey,
                                                 fontSize: 11),
@@ -409,7 +415,9 @@ class _ExecutiveSelectSellerScreenState
                                               BorderRadius.circular(3.5),
                                         ),
                                         child: Text(
-                                          requestedSellerList[index]['status'],
+                                          requestedSellerList[index]
+                                                  ?['status'] ??
+                                              '',
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
                                               color: Colors.white,

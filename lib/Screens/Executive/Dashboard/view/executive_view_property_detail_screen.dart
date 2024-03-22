@@ -249,10 +249,10 @@ class _ExecutiveViewPropertyDetailScreenState
             },
             child: Row(
               children: [
-                const HorizontalSpace(width: 7),
+                const HorizontalSpace(width: 9),
                 Image.asset(
                   'assets/images/prev.png',
-                  height: 15,
+                  height: 17,
                 ),
                 const HorizontalSpace(width: 15),
                 const Text(
@@ -449,8 +449,8 @@ class _ExecutiveViewPropertyDetailScreenState
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
-                                InkWell(
-                                  onTap: () {
+                                TextButton(
+                                  onPressed: () {
                                     Nav().push(
                                       context,
                                       ExecutiveUnitsScreen(
@@ -467,7 +467,7 @@ class _ExecutiveViewPropertyDetailScreenState
                                 )
                               ],
                             ),
-                            const VerticalSpace(height: 7),
+                            // const VerticalSpace(height: 7),
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
@@ -591,8 +591,8 @@ class _ExecutiveViewPropertyDetailScreenState
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
-                                InkWell(
-                                  onTap: () {
+                                TextButton(
+                                  onPressed: () {
                                     Nav().push(
                                       context,
                                       ExecutiveEntriesScreen(
@@ -609,7 +609,7 @@ class _ExecutiveViewPropertyDetailScreenState
                                 )
                               ],
                             ),
-                            const VerticalSpace(height: 7),
+                            // const VerticalSpace(height: 7),
                             Container(
                               padding: const EdgeInsets.all(10),
                               width: double.infinity,
