@@ -22,6 +22,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:get/get.dart';
 // import 'package:new_version_plus/new_version_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -43,6 +44,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
   final _scrollController = ScrollController();
 
   //FOR LOADER
+  bool isLoading = false;
   bool paginationLoader = false;
 
   //FOR PAGINATION
@@ -177,19 +179,31 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
     }
 
     var data = {"user_id": userInfo.userId, "page_no": recentProperties.length};
+    print(data);
 
     final result = await Api().homeContent(data, userInfo.token, context);
 
     if (result['status'].toString() == '1') {
       setState(() {
-        recentProperties.addAll(result['data']['projects']);
+        recentProperties.addAll(result?['data']?['projects'] ?? []);
+        isLoading = false;
         paginationLoader = false;
       });
     } else if (result['status'].toString() == '3') {
       throw Exception('Device changed');
     } else {
+      isLoading = false;
       throw Exception('Failed to load recent properties');
     }
+  }
+
+  //FOR RELOADING HOME CONTENT
+  void _reload() {
+    setState(() {
+      recentProperties.clear();
+      isLoading = true;
+    });
+    _homeContent();
   }
 
   //LOGOUT
@@ -297,12 +311,13 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: IconButton(
-                  onPressed: () {
-                    Nav().push(
+                  onPressed: () async {
+                    await Navigator.push(
                         context,
-                        LeaderNotificationScreen(
-                          reloadHomeContent: _homeContent,
-                        ));
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const LeaderNotificationScreen()));
+                    _reload();
                   },
                   icon: Image.asset(
                     'assets/images/notification.png',
@@ -326,13 +341,14 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            LeaderSelectSellerScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const LeaderSelectSellerScreen()));
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-select-seller.png',
@@ -356,13 +372,15 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            LeaderMySellerScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const LeaderMySellerScreen()));
+
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-my-seller.png',
@@ -386,13 +404,15 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            LeaderPropertiesScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const LeaderPropertiesScreen()));
+
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-properties.png',
@@ -416,13 +436,14 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            LeaderExecutiveScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const LeaderExecutiveScreen()));
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-executives.png',
@@ -446,13 +467,14 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            LeaderMyProfileScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const LeaderMyProfileScreen()));
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-profile.png',
@@ -637,36 +659,72 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                             crossAxisSpacing: 15,
                             mainAxisSpacing: 18),
                     itemBuilder: (context, index) => InkWell(
-                      onTap: () {
-                        index == 0
-                            ? Nav().push(
-                                context,
-                                LeaderSelectSellerScreen(
-                                  reloadHomeContent: _homeContent,
-                                ))
-                            : index == 1
-                                ? Nav().push(
-                                    context,
-                                    LeaderMySellerScreen(
-                                      reloadHomeContent: _homeContent,
-                                    ))
-                                : index == 2
-                                    ? Nav().push(
-                                        context,
-                                        LeaderPropertiesScreen(
-                                          reloadHomeContent: _homeContent,
-                                        ))
-                                    : index == 3
-                                        ? Nav().push(
-                                            context,
-                                            LeaderExecutiveScreen(
-                                              reloadHomeContent: _homeContent,
-                                            ))
-                                        : Nav().push(
-                                            context,
-                                            LeaderMyProfileScreen(
-                                              reloadHomeContent: _homeContent,
-                                            ));
+                      onTap: () async {
+                        if (index == 0) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LeaderSelectSellerScreen()));
+                          _reload();
+                        } else if (index == 1) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LeaderMySellerScreen()));
+                          _reload();
+                        } else if (index == 2) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LeaderPropertiesScreen()));
+                          _reload();
+                        } else if (index == 3) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LeaderExecutiveScreen()));
+                          _reload();
+                        } else if (index == 4) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LeaderMyProfileScreen()));
+                          _reload();
+                        }
+                        // index == 0
+                        //     ? Nav().push(
+                        //         context,
+                        //         LeaderSelectSellerScreen(
+                        //           reloadHomeContent: _homeContent,
+                        //         ))
+                        //     : index == 1
+                        //         ? Nav().push(
+                        //             context,
+                        //             LeaderMySellerScreen(
+                        //               reloadHomeContent: _homeContent,
+                        //             ))
+                        //         : index == 2
+                        //             ? Nav().push(
+                        //                 context,
+                        //                 LeaderPropertiesScreen(
+                        //                   reloadHomeContent: _homeContent,
+                        //                 ))
+                        //             : index == 3
+                        //                 ? Nav().push(
+                        //                     context,
+                        //                     LeaderExecutiveScreen(
+                        //                       reloadHomeContent: _homeContent,
+                        //                     ))
+                        //                 : Nav().push(
+                        //                     context,
+                        //                     LeaderMyProfileScreen(
+                        //                       reloadHomeContent: _homeContent,
+                        //                     ));
                       },
                       child: Container(
                         padding: EdgeInsets.only(top: screenWidth * 0.03),
@@ -712,118 +770,132 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                         return const Center(
                             child: Text('Failed to fetch data'));
                       } else {
-                        return recentProperties.isEmpty
-                            ? const Center(
-                                child: Text(
-                                  'No recent properties',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 11),
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: recentProperties.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) => InkWell(
-                                  onTap: () {
-                                    Nav().push(
-                                        context,
-                                        LeaderViewPropertyDetailScreen(
-                                          projectNo: recentProperties[index]
-                                              ['id'],
-                                          reloadHomeContent: _homeContent,
-                                        ));
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 15),
-                                    padding: const EdgeInsets.all(8.5),
-                                    decoration: BoxDecoration(
-                                      color: inputBg,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: inputBorder),
+                        return isLoading
+                            ? const WaitingShimmer(count: 2, height: 105)
+                            : recentProperties.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      'No recent properties',
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 11),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        CachedNetworkImage(
-                                          imageUrl: recentProperties[index]
-                                              ['is_project_image'],
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            height: 80,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          placeholder: (context, url) =>
-                                              Container(
-                                            height: 80,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: Shimmer.fromColors(
-                                              baseColor:
-                                                  const Color(0xFFE2E2E2),
-                                              highlightColor:
-                                                  Colors.grey.shade50,
-                                              child: Container(
+                                  )
+                                : ListView.builder(
+                                    itemCount: recentProperties.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) => InkWell(
+                                      onTap: () {
+                                        Nav().push(
+                                            context,
+                                            LeaderViewPropertyDetailScreen(
+                                              projectNo: recentProperties[index]
+                                                  ['id'],
+                                              reloadHomeContent: _homeContent,
+                                            ));
+                                      },
+                                      child: Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 15),
+                                        padding: const EdgeInsets.all(8.5),
+                                        decoration: BoxDecoration(
+                                          color: inputBg,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border:
+                                              Border.all(color: inputBorder),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            CachedNetworkImage(
+                                              imageUrl: recentProperties[index]
+                                                  ['is_project_image'],
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                height: 80,
+                                                width: 80,
                                                 decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                      169, 226, 226, 226),
                                                   borderRadius:
-                                                      BorderRadius.circular(13),
+                                                      BorderRadius.circular(8),
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                        ),
-                                        const HorizontalSpace(width: 17.5),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              recentProperties[index]
-                                                      ?['project_name'] ??
-                                                  '',
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const VerticalSpace(height: 6),
-                                            SizedBox(
-                                              width: screenWidth * 0.6,
-                                              child: Text(
-                                                recentProperties[index]
-                                                        ?['location'] ??
-                                                    '',
-                                                overflow: TextOverflow.clip,
-                                                style: const TextStyle(
-                                                    fontSize: 12.5),
+                                              placeholder: (context, url) =>
+                                                  Container(
+                                                height: 80,
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                child: Shimmer.fromColors(
+                                                  baseColor:
+                                                      const Color(0xFFE2E2E2),
+                                                  highlightColor:
+                                                      Colors.grey.shade50,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              169,
+                                                              226,
+                                                              226,
+                                                              226),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              13),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
                                             ),
-                                            const VerticalSpace(height: 6),
-                                            Text(
-                                              'Total Units : ${recentProperties[index]?['no_of_units'] ?? ''}',
-                                              style: const TextStyle(
-                                                  fontSize: 12.5),
-                                            ),
+                                            const HorizontalSpace(width: 17.5),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  recentProperties[index]
+                                                          ?['project_name'] ??
+                                                      '',
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                const VerticalSpace(height: 6),
+                                                SizedBox(
+                                                  width: screenWidth * 0.6,
+                                                  child: Text(
+                                                    recentProperties[index]
+                                                            ?['location'] ??
+                                                        '',
+                                                    overflow: TextOverflow.clip,
+                                                    style: const TextStyle(
+                                                        fontSize: 12.5),
+                                                  ),
+                                                ),
+                                                const VerticalSpace(height: 6),
+                                                Text(
+                                                  'Total Units : ${recentProperties[index]?['no_of_units'] ?? ''}',
+                                                  style: const TextStyle(
+                                                      fontSize: 12.5),
+                                                ),
+                                              ],
+                                            )
                                           ],
-                                        )
-                                      ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
+                                  );
                       }
                     }),
                   ),

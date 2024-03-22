@@ -9,9 +9,8 @@ import 'package:elzsi/Utils/waiting_shimmer.dart';
 import 'package:flutter/material.dart';
 
 class LeaderExecutiveScreen extends StatefulWidget {
-  const LeaderExecutiveScreen({super.key, required this.reloadHomeContent});
+  const LeaderExecutiveScreen({super.key});
 
-  final Function() reloadHomeContent;
   @override
   State<LeaderExecutiveScreen> createState() => _LeaderExecutiveScreenState();
 }
@@ -80,7 +79,7 @@ class _LeaderExecutiveScreenState extends State<LeaderExecutiveScreen> {
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
+        // widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -91,7 +90,7 @@ class _LeaderExecutiveScreenState extends State<LeaderExecutiveScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [

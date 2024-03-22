@@ -9,10 +9,7 @@ import 'package:elzsi/Utils/waiting_shimmer.dart';
 import 'package:flutter/material.dart';
 
 class ExecutiveNotificationScreen extends StatefulWidget {
-  const ExecutiveNotificationScreen(
-      {super.key, required this.reloadHomeContent});
-
-  final Function() reloadHomeContent;
+  const ExecutiveNotificationScreen({super.key});
 
   @override
   State<ExecutiveNotificationScreen> createState() =>
@@ -92,7 +89,7 @@ class _ExecutiveNotificationScreenState
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
+        // widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -103,7 +100,7 @@ class _ExecutiveNotificationScreenState
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [

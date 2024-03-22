@@ -12,9 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ExecutivePropertiesScreen extends StatefulWidget {
-  const ExecutivePropertiesScreen({super.key, required this.reloadHomeContent});
+  const ExecutivePropertiesScreen({super.key});
 
-  final Function() reloadHomeContent;
   @override
   State<ExecutivePropertiesScreen> createState() =>
       _ExecutivePropertiesScreenState();
@@ -92,7 +91,7 @@ class _ExecutivePropertiesScreenState extends State<ExecutivePropertiesScreen> {
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
+        // widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -103,7 +102,7 @@ class _ExecutivePropertiesScreenState extends State<ExecutivePropertiesScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [

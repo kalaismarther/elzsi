@@ -40,6 +40,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
   final _scrollController = ScrollController();
 
   //FOR LOADER
+  bool isLoading = false;
   bool paginationLoader = false;
 
   //FOR PAGINATION
@@ -174,21 +175,31 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
     }
 
     var data = {"user_id": userInfo.userId, "page_no": recentProperties.length};
+    print(data);
 
     final result = await Api().homeContent(data, userInfo.token, context);
 
     if (result['status'].toString() == '1') {
       setState(() {
-        recentProperties.addAll(result['data']['projects']);
+        recentProperties.addAll(result?['data']?['projects'] ?? []);
+        isLoading = false;
         paginationLoader = false;
       });
     } else if (result['status'].toString() == '3') {
       throw Exception('Device changed');
     } else {
-      setState(() {
-        paginationLoader = false;
-      });
+      isLoading = false;
+      throw Exception('Failed to load recent properties');
     }
+  }
+
+  //FOR RELOADING HOME CONTENT
+  void _reload() {
+    setState(() {
+      recentProperties.clear();
+      isLoading = true;
+    });
+    _homeContent();
   }
 
   //LOGOUT
@@ -278,12 +289,13 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: IconButton(
-                  onPressed: () {
-                    Nav().push(
+                  onPressed: () async {
+                    await Navigator.push(
                         context,
-                        ExecutiveNotificationScreen(
-                          reloadHomeContent: _homeContent,
-                        ));
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const ExecutiveNotificationScreen()));
+                    _reload();
                   },
                   icon: Image.asset(
                     'assets/images/notification.png',
@@ -307,13 +319,14 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            ExecutiveSelectSellerScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ExecutiveSelectSellerScreen()));
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-select-seller.png',
@@ -337,13 +350,15 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            ExecutiveMySellerScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ExecutiveMySellerScreen()));
+
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-my-seller.png',
@@ -367,13 +382,15 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            ExecutivePropertiesScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ExecutivePropertiesScreen()));
+
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-properties.png',
@@ -397,13 +414,15 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                     ),
                     child: ListTile(
                       splashColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async {
                         Nav().pop(context);
-                        Nav().push(
+                        await Navigator.push(
                             context,
-                            ExecutiveMyProfileScreen(
-                              reloadHomeContent: _homeContent,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ExecutiveMyProfileScreen()));
+
+                        _reload();
                       },
                       leading: Image.asset(
                         'assets/images/menu-profile.png',
@@ -589,30 +608,59 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                             crossAxisSpacing: 15,
                             mainAxisSpacing: 18),
                     itemBuilder: (context, index) => InkWell(
-                      onTap: () {
-                        index == 0
-                            ? Nav().push(
-                                context,
-                                ExecutiveSelectSellerScreen(
-                                  reloadHomeContent: _homeContent,
-                                ))
-                            : index == 1
-                                ? Nav().push(
-                                    context,
-                                    ExecutiveMySellerScreen(
-                                      reloadHomeContent: _homeContent,
-                                    ))
-                                : index == 2
-                                    ? Nav().push(
-                                        context,
-                                        ExecutivePropertiesScreen(
-                                          reloadHomeContent: _homeContent,
-                                        ))
-                                    : Nav().push(
-                                        context,
-                                        ExecutiveMyProfileScreen(
-                                          reloadHomeContent: _homeContent,
-                                        ));
+                      onTap: () async {
+                        if (index == 0) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutiveSelectSellerScreen()));
+                          _reload();
+                        } else if (index == 1) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutiveMySellerScreen()));
+                          _reload();
+                        } else if (index == 2) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutivePropertiesScreen()));
+                          _reload();
+                        } else if (index == 3) {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutiveMyProfileScreen()));
+                          _reload();
+                        }
+                        // index == 0
+                        //     ? Nav().push(
+                        //         context,
+                        //         ExecutiveSelectSellerScreen(
+                        //           reloadHomeContent: _homeContent,
+                        //         ))
+                        //     : index == 1
+                        //         ? Nav().push(
+                        //             context,
+                        //             ExecutiveMySellerScreen(
+                        //               reloadHomeContent: _homeContent,
+                        //             ))
+                        //         : index == 2
+                        //             ? Nav().push(
+                        //                 context,
+                        //                 ExecutivePropertiesScreen(
+                        //                   reloadHomeContent: _homeContent,
+                        //                 ))
+                        //             : Nav().push(
+                        //                 context,
+                        //                 ExecutiveMyProfileScreen(
+                        //                   reloadHomeContent: _homeContent,
+                        //                 ));
                       },
                       child: Container(
                         padding: EdgeInsets.only(top: screenWidth * 0.03),
@@ -659,129 +707,143 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                         return const Center(
                             child: Text('Failed to fetch data'));
                       } else {
-                        return recentProperties.isEmpty
-                            ? const Center(
-                                child: Text(
-                                  'No recent properties',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 11),
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: recentProperties.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) => InkWell(
-                                  onTap: () {
-                                    Nav().push(
-                                        context,
-                                        ExecutiveViewPropertyDetailScreen(
-                                          projectNo: recentProperties[index]
-                                              ['id'],
-                                          reloadHomeContent: _homeContent,
-                                        ));
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 15),
-                                    padding: const EdgeInsets.all(8.5),
-                                    decoration: BoxDecoration(
-                                      color: inputBg,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: inputBorder),
+                        return isLoading
+                            ? const WaitingShimmer(count: 2, height: 105)
+                            : recentProperties.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      'No recent properties',
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 11),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        CachedNetworkImage(
-                                          imageUrl: recentProperties[index]
-                                              ['is_project_image'],
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            height: 80,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          placeholder: (context, url) =>
-                                              Container(
-                                            height: 80,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: Shimmer.fromColors(
-                                              baseColor:
-                                                  const Color(0xFFE2E2E2),
-                                              highlightColor:
-                                                  Colors.grey.shade50,
-                                              child: Container(
+                                  )
+                                : ListView.builder(
+                                    itemCount: recentProperties.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) => InkWell(
+                                      onTap: () {
+                                        Nav().push(
+                                            context,
+                                            ExecutiveViewPropertyDetailScreen(
+                                              projectNo: recentProperties[index]
+                                                  ['id'],
+                                              reloadHomeContent: _homeContent,
+                                            ));
+                                      },
+                                      child: Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 15),
+                                        padding: const EdgeInsets.all(8.5),
+                                        decoration: BoxDecoration(
+                                          color: inputBg,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border:
+                                              Border.all(color: inputBorder),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            CachedNetworkImage(
+                                              imageUrl: recentProperties[index]
+                                                  ['is_project_image'],
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                height: 80,
+                                                width: 80,
                                                 decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                      169, 226, 226, 226),
                                                   borderRadius:
-                                                      BorderRadius.circular(13),
+                                                      BorderRadius.circular(8),
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                        ),
-                                        // ClipRRect(
-                                        //   borderRadius:
-                                        //       BorderRadius.circular(8),
-                                        //   child: Image.network(
-                                        //     recentProperties[index]
-                                        //         ['is_project_image'],
-                                        //     height: 80,
-                                        //     width: 80,
-                                        //     fit: BoxFit.cover,
-                                        //   ),
-                                        // ),
-                                        const HorizontalSpace(width: 17.5),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              recentProperties[index]
-                                                      ?['project_name'] ??
-                                                  '',
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const VerticalSpace(height: 6),
-                                            SizedBox(
-                                              width: screenWidth * 0.6,
-                                              child: Text(
-                                                recentProperties[index]
-                                                        ?['location'] ??
-                                                    '',
-                                                overflow: TextOverflow.clip,
-                                                style: const TextStyle(
-                                                    fontSize: 12.5),
+                                              placeholder: (context, url) =>
+                                                  Container(
+                                                height: 80,
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                child: Shimmer.fromColors(
+                                                  baseColor:
+                                                      const Color(0xFFE2E2E2),
+                                                  highlightColor:
+                                                      Colors.grey.shade50,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              169,
+                                                              226,
+                                                              226,
+                                                              226),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              13),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
                                             ),
-                                            const VerticalSpace(height: 6),
-                                            Text(
-                                              'Total Units : ${recentProperties[index]?['no_of_units'] ?? ''}',
-                                              style: const TextStyle(
-                                                  fontSize: 12.5),
-                                            ),
+                                            // ClipRRect(
+                                            //   borderRadius:
+                                            //       BorderRadius.circular(8),
+                                            //   child: Image.network(
+                                            //     recentProperties[index]
+                                            //         ['is_project_image'],
+                                            //     height: 80,
+                                            //     width: 80,
+                                            //     fit: BoxFit.cover,
+                                            //   ),
+                                            // ),
+                                            const HorizontalSpace(width: 17.5),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  recentProperties[index]
+                                                          ?['project_name'] ??
+                                                      '',
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                const VerticalSpace(height: 6),
+                                                SizedBox(
+                                                  width: screenWidth * 0.6,
+                                                  child: Text(
+                                                    recentProperties[index]
+                                                            ?['location'] ??
+                                                        '',
+                                                    overflow: TextOverflow.clip,
+                                                    style: const TextStyle(
+                                                        fontSize: 12.5),
+                                                  ),
+                                                ),
+                                                const VerticalSpace(height: 6),
+                                                Text(
+                                                  'Total Units : ${recentProperties[index]?['no_of_units'] ?? ''}',
+                                                  style: const TextStyle(
+                                                      fontSize: 12.5),
+                                                ),
+                                              ],
+                                            )
                                           ],
-                                        )
-                                      ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
+                                  );
                       }
                     }),
                   ),

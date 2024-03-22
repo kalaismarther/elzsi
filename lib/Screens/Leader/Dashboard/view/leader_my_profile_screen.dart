@@ -24,9 +24,8 @@ import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class LeaderMyProfileScreen extends StatefulWidget {
-  const LeaderMyProfileScreen({super.key, required this.reloadHomeContent});
+  const LeaderMyProfileScreen({super.key});
 
-  final Function() reloadHomeContent;
   @override
   State<LeaderMyProfileScreen> createState() => _LeaderMyProfileScreenState();
 }
@@ -632,7 +631,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
       canPop: isLoading ? false : true,
       onPopInvoked: (didPop) {
         if (didPop) {
-          widget.reloadHomeContent();
+          // widget.reloadHomeContent();
           return;
         }
         Common().showToast('Please wait. Profile is updating');
@@ -646,7 +645,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [

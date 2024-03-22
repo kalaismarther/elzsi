@@ -15,9 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LeaderSelectSellerScreen extends StatefulWidget {
-  const LeaderSelectSellerScreen({super.key, required this.reloadHomeContent});
-
-  final Function() reloadHomeContent;
+  const LeaderSelectSellerScreen({super.key});
 
   @override
   State<LeaderSelectSellerScreen> createState() =>
@@ -147,7 +145,7 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
+        // widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -158,7 +156,7 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [

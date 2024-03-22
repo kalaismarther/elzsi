@@ -9,9 +9,7 @@ import 'package:elzsi/Utils/waiting_shimmer.dart';
 import 'package:flutter/material.dart';
 
 class LeaderNotificationScreen extends StatefulWidget {
-  const LeaderNotificationScreen({super.key, required this.reloadHomeContent});
-
-  final Function() reloadHomeContent;
+  const LeaderNotificationScreen({super.key});
 
   @override
   State<LeaderNotificationScreen> createState() =>
@@ -89,7 +87,7 @@ class _LeaderNotificationScreenState extends State<LeaderNotificationScreen> {
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
+        // widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -100,7 +98,7 @@ class _LeaderNotificationScreenState extends State<LeaderNotificationScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [

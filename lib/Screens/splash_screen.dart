@@ -51,6 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await fcm.requestPermission();
     // ignore: unused_local_variable
     final fcmToken = await fcm.getToken();
+    print(fcmToken);
 
     await FirebaseMessaging.instance.getInitialMessage();
 

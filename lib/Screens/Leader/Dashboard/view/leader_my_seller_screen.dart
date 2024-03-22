@@ -12,9 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LeaderMySellerScreen extends StatefulWidget {
-  const LeaderMySellerScreen({super.key, required this.reloadHomeContent});
-
-  final Function() reloadHomeContent;
+  const LeaderMySellerScreen({super.key});
 
   @override
   State<LeaderMySellerScreen> createState() => _LeaderMySellerScreenState();
@@ -90,9 +88,7 @@ class _LeaderMySellerScreenState extends State<LeaderMySellerScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     return PopScope(
       canPop: true,
-      onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
-      },
+      onPopInvoked: (didPop) {},
       child: Scaffold(
         backgroundColor: primaryColor,
         appBar: AppBar(
@@ -102,7 +98,6 @@ class _LeaderMySellerScreenState extends State<LeaderMySellerScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
             },
             child: Row(
               children: [

@@ -575,9 +575,10 @@ class _ExecutiveViewPropertyDetailScreenState
                                       ],
                                     ),
                             ),
+                            const VerticalSpace(height: 20),
                           ],
                         ),
-                      const VerticalSpace(height: 20),
+
                       if (agentEntries != null && agentEntries!.isNotEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -790,20 +791,22 @@ class _ExecutiveViewPropertyDetailScreenState
                                                             .trim() ==
                                                         'AVAILABLE'
                                                 ? IconButton(
-                                                    onPressed: () async {
-                                                      await Nav().push(
+                                                    onPressed: () {
+                                                      Nav().push(
                                                           context,
                                                           ExecutiveEditEntryScreen(
-                                                              previousEntryDetail:
-                                                                  agentEntries?[
-                                                                          0] ??
-                                                                      {},
-                                                              propertyDetail:
-                                                                  thisPropertyDetail!,
-                                                              onBack:
-                                                                  _getPropertyDetail));
+                                                            previousEntryDetail:
+                                                                agentEntries?[
+                                                                        0] ??
+                                                                    {},
+                                                            propertyDetail:
+                                                                thisPropertyDetail!,
+                                                            onBack:
+                                                                _getPropertyDetail,
+                                                          ));
                                                       // agentEntries?.clear();
-                                                      _getPropertyDetail();
+
+                                                      // _getPropertyDetail();
                                                     },
                                                     icon: Image.asset(
                                                       'assets/images/edit.png',
@@ -906,12 +909,13 @@ class _ExecutiveViewPropertyDetailScreenState
                     //       },
                     //     ));
 
-                    await Nav().push(
+                    await Navigator.push(
                         context,
-                        ExecutiveNewEntryScreen(
-                          propertyDetail: thisPropertyDetail ?? {},
-                          onBack: _getPropertyDetail,
-                        ));
+                        MaterialPageRoute(
+                            builder: (context) => ExecutiveNewEntryScreen(
+                                  propertyDetail: thisPropertyDetail ?? {},
+                                  onBack: _getPropertyDetail,
+                                )));
                     // agentEntries?.clear();
                     _getPropertyDetail();
                   },

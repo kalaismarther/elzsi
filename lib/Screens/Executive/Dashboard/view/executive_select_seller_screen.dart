@@ -15,10 +15,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart';
 
 class ExecutiveSelectSellerScreen extends StatefulWidget {
-  const ExecutiveSelectSellerScreen(
-      {super.key, required this.reloadHomeContent});
-
-  final Function() reloadHomeContent;
+  const ExecutiveSelectSellerScreen({super.key});
 
   @override
   State<ExecutiveSelectSellerScreen> createState() =>
@@ -166,7 +163,7 @@ class _ExecutiveSelectSellerScreenState
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
+        // widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -177,7 +174,7 @@ class _ExecutiveSelectSellerScreenState
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [

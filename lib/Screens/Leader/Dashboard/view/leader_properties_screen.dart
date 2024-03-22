@@ -12,9 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LeaderPropertiesScreen extends StatefulWidget {
-  const LeaderPropertiesScreen({super.key, required this.reloadHomeContent});
+  const LeaderPropertiesScreen({super.key});
 
-  final Function() reloadHomeContent;
   @override
   State<LeaderPropertiesScreen> createState() => _LeaderPropertiesScreenState();
 }
@@ -90,9 +89,7 @@ class _LeaderPropertiesScreenState extends State<LeaderPropertiesScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     return PopScope(
       canPop: true,
-      onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
-      },
+      onPopInvoked: (didPop) {},
       child: Scaffold(
         backgroundColor: primaryColor,
         appBar: AppBar(
@@ -102,7 +99,6 @@ class _LeaderPropertiesScreenState extends State<LeaderPropertiesScreen> {
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
             },
             child: Row(
               children: [
