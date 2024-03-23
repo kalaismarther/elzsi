@@ -76,13 +76,14 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: UpgradeAlert(
-          dialogStyle: UpgradeDialogStyle.cupertino,
-          showIgnore: false,
-          showLater: false,
-          showReleaseNotes: false,
-          cupertinoButtonTextStyle: const TextStyle(color: Colors.blue),
-          upgrader: Upgrader(debugLogging: true),
-          child: const SplashScreen()),
+        dialogStyle: UpgradeDialogStyle.cupertino,
+        showIgnore: false,
+        showLater: false,
+        showReleaseNotes: false,
+        cupertinoButtonTextStyle: const TextStyle(color: Colors.blue),
+        upgrader: Upgrader(debugLogging: true),
+        child: const SplashScreen(),
+      ),
     );
   }
 }

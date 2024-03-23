@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1052214880959:android:95611d1c359260ef0eb40a",
+        "mobilesdk_app_id": "1:1052214880959:android:eb16f45804d6e0f30eb40a",
         "android_client_info": {
-          "package_name": "com.example.elzsi"
+          "package_name": "com.smart.elzsi"
         }
       },
       "oauth_client": [],
@@ -26,9 +26,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1052214880959:android:eb16f45804d6e0f30eb40a",
+        "mobilesdk_app_id": "1:1052214880959:android:2972f2430e75ed590eb40a",
         "android_client_info": {
-          "package_name": "com.smart.elzsi"
+          "package_name": "com.smart.elzsimanager"
         }
       },
       "oauth_client": [],

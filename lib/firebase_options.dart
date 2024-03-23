@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDmWHAJ5JI_-4pnR43b0H5wLJSyE1v6w_Y',
-    appId: '1:1052214880959:android:95611d1c359260ef0eb40a',
+    appId: '1:1052214880959:android:2972f2430e75ed590eb40a',
     messagingSenderId: '1052214880959',
     projectId: 'elzsicrm',
     storageBucket: 'elzsicrm.appspot.com',
@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCrxkVrttwoa-24iTzjYy0p2y-YRvOQ9Ng',
-    appId: '1:1052214880959:ios:bc5d35a2daca86050eb40a',
+    appId: '1:1052214880959:ios:8950e07623dcfaa00eb40a',
     messagingSenderId: '1052214880959',
     projectId: 'elzsicrm',
     storageBucket: 'elzsicrm.appspot.com',
-    iosBundleId: 'com.example.elzsi',
+    iosBundleId: 'com.smart.elzsimanager',
   );
 }
