@@ -786,14 +786,17 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                                     physics:
                                         const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) => InkWell(
-                                      onTap: () {
-                                        Nav().push(
+                                      onTap: () async {
+                                        await Navigator.push(
                                             context,
-                                            LeaderViewPropertyDetailScreen(
-                                              projectNo: recentProperties[index]
-                                                  ['id'],
-                                              reloadHomeContent: _homeContent,
-                                            ));
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LeaderViewPropertyDetailScreen(
+                                                      projectNo:
+                                                          recentProperties[
+                                                              index]['id'],
+                                                    )));
+                                        _reload();
                                       },
                                       child: Container(
                                         margin:
@@ -901,7 +904,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                   ),
                   paginationLoader
                       ? const Padding(
-                          padding: EdgeInsets.only(top: 5),
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
                           child: Loader(),
                         )
                       : const VerticalSpace(height: 0),

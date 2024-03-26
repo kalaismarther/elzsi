@@ -318,9 +318,9 @@ class _ExecutiveVerificationScreenState
                               return null;
                             }
                           },
-                          onCompleted: (value) {
-                            _verifyOTP();
-                          },
+                          // onCompleted: (value) {
+                          //   _verifyOTP();
+                          // },
                         ),
                       ),
                     ),

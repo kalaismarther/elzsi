@@ -52,6 +52,8 @@ class _SellersState extends State<Sellers> {
 
     var data = {"user_id": userInfo.userId, "page_no": sellersList.length};
 
+    print(data);
+
     if (!context.mounted) {
       return;
     }
@@ -59,7 +61,7 @@ class _SellersState extends State<Sellers> {
 
     if (result['status'].toString() == '1') {
       setState(() {
-        sellersList.addAll(result['data']);
+        sellersList.addAll(result?['data'] ?? []);
         isLoading = false;
         paginationLoader = false;
       });
@@ -112,9 +114,10 @@ class _SellersState extends State<Sellers> {
                     onTap: () {
                       widget.onSelect(sellersList[index]);
                       Nav().pop(context);
+                      print(sellersList[index]);
                     },
-                    leading: sellersList[index]['is_business_logo'] == null ||
-                            sellersList[index]['is_business_logo'].isEmpty
+                    leading: sellersList[index]?['is_profile_image'] == null ||
+                            sellersList[index]?['is_profile_image'].isEmpty
                         ? const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Icon(
@@ -123,7 +126,7 @@ class _SellersState extends State<Sellers> {
                             ),
                           )
                         : CachedNetworkImage(
-                            imageUrl: sellersList[index]['is_business_logo'],
+                            imageUrl: sellersList[index]['is_profile_image'],
                             imageBuilder: (context, imageProvider) => Container(
                               height: 35,
                               width: 35,
@@ -142,7 +145,7 @@ class _SellersState extends State<Sellers> {
                                 const Icon(Icons.error),
                           ),
                     title: Text(
-                      sellersList[index]['business_name'],
+                      sellersList[index]?['business_name'] ?? '',
                       style: const TextStyle(
                           fontSize: 15, overflow: TextOverflow.clip),
                     ),

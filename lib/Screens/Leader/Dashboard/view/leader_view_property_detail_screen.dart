@@ -17,11 +17,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class LeaderViewPropertyDetailScreen extends StatefulWidget {
-  const LeaderViewPropertyDetailScreen(
-      {super.key, required this.projectNo, required this.reloadHomeContent});
+  const LeaderViewPropertyDetailScreen({super.key, required this.projectNo});
 
   final int projectNo;
-  final Function() reloadHomeContent;
 
   @override
   State<LeaderViewPropertyDetailScreen> createState() =>
@@ -124,7 +122,7 @@ class _LeaderViewPropertyDetailScreenState
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) {
-        widget.reloadHomeContent();
+        // widget.reloadHomeContent();
       },
       child: Scaffold(
         backgroundColor: primaryColor,
@@ -135,7 +133,7 @@ class _LeaderViewPropertyDetailScreenState
             highlightColor: Colors.transparent,
             onTap: () {
               Nav().pop(context);
-              widget.reloadHomeContent();
+              // widget.reloadHomeContent();
             },
             child: Row(
               children: [
@@ -623,6 +621,23 @@ class _LeaderViewPropertyDetailScreenState
                                                 'Status : ${agentEntries?[0]?['status'] ?? ''}',
                                                 style: const TextStyle(
                                                     fontSize: 12),
+                                              ),
+                                              const VerticalSpace(height: 6),
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    'Entry by : ',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
+                                                  Text(
+                                                    '${agentEntries?[0]?['agent_details']?['agent_name'] ?? ''} (Executive)',
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
                                               const VerticalSpace(height: 5),
                                             ],

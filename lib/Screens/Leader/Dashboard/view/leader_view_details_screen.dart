@@ -236,7 +236,6 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
                                     LeaderViewPropertyDetailScreen(
                                       projectNo: linkedSellerProjects[index]
                                           ['id'],
-                                      reloadHomeContent: () {},
                                     ));
                               },
                               child: Container(

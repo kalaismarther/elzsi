@@ -85,6 +85,7 @@ class _ExecutiveSelectSellerScreenState
         isLoading = false;
         paginationLoader = false;
       });
+      print(result['data']);
     } else if (result['status'].toString() == '3') {
       throw Exception('Device changed');
     } else {
@@ -310,12 +311,12 @@ class _ExecutiveSelectSellerScreenState
                                           const EdgeInsets.symmetric(
                                               horizontal: 6, vertical: 0),
                                       leading: requestedSellerList[index]
-                                                          ['is_seller']
-                                                      ['is_business_logo'] ==
+                                                          ?['is_seller']
+                                                      ?['is_profile_image'] ==
                                                   null ||
                                               requestedSellerList[index]
-                                                          ['is_seller']
-                                                      ['is_business_logo']
+                                                          ?['is_seller']
+                                                      ?['is_profile_image']
                                                   .trim()
                                                   .isEmpty
                                           ? const Padding(
@@ -337,7 +338,7 @@ class _ExecutiveSelectSellerScreenState
                                                   imageUrl:
                                                       requestedSellerList[index]
                                                               ['is_seller']
-                                                          ['is_business_logo'],
+                                                          ['is_profile_image'],
                                                   placeholder: (context, url) =>
                                                       Shimmer.fromColors(
                                                     baseColor:

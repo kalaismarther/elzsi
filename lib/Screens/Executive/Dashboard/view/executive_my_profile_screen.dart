@@ -1778,6 +1778,7 @@ import 'package:elzsi/Utils/common.dart';
 import 'package:elzsi/Utils/regex.dart';
 import 'package:elzsi/Widgets/common_modal.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:elzsi/Utils/colors.dart';
 import 'package:elzsi/Utils/horizontalspace.dart';
@@ -1831,8 +1832,38 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   final _pincodeController = TextEditingController();
   final _yearsOfExperienceController = TextEditingController();
 
+  //FOCUS NODES
+  final _nameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _mobileFocus = FocusNode();
+  final _addressFocus = FocusNode();
+  final _projectsCountFocus = FocusNode();
+  final _dobFocus = FocusNode();
+  final _genderFocus = FocusNode();
+  final _areaFocus = FocusNode();
+  final _pincodeFocus = FocusNode();
+  final _yearsOfExperienceFocus = FocusNode();
+
+  //FUNCTION FOR SCROLLING INTO ERROR TEXT FIELD
+  void _scrollToErrorField(FocusNode focusField) {
+    FocusScope.of(context).unfocus();
+    final RenderObject renderObject = focusField.context!.findRenderObject()!;
+    final RenderAbstractViewport viewport =
+        RenderAbstractViewport.of(renderObject);
+    final double offset = viewport.getOffsetToReveal(renderObject, 0.0).offset;
+
+    _scrollController.animateTo(
+      offset - 75,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.linear,
+    );
+  }
+
   //EXECUTIVE TYPE
   int workingType = 1;
+
+  //GENDERS
+  List genders = ['Male', 'Female', 'Others'];
 
   //ADDRESS INFO
   Map? selectedPincode;
@@ -1868,7 +1899,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
 
   DateTime _startingYear(String date) {
     DateTime dateTime = DateTime.parse("$date-01");
-    print(dateTime);
+
     return dateTime;
   }
 
@@ -1972,7 +2003,11 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   //CHOOSE DOB
   void _chooseDOB() async {
     final pickedDate = await showDatePicker(
-        context: context, firstDate: DateTime(1900), lastDate: DateTime.now());
+      context: context,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(
+          DateTime.now().year - 18, DateTime.now().month, DateTime.now().day),
+    );
 
     if (pickedDate != null) {
       setState(() {
@@ -2013,9 +2048,9 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
       ]);
     });
     _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.easeInOut,
+      _scrollController.position.maxScrollExtent + 375,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOut,
     );
   }
 
@@ -2155,7 +2190,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
 
     if (result['status'].toString() == '1') {
       setState(() {
-        profileInfo = result['data'];
+        profileInfo = result?['data'] ?? {};
         workingType = profileInfo?['work_position'] ?? 1;
         _nameController.text = profileInfo?['name'] ?? '';
         _emailController.text = profileInfo?['email'] ?? '';
@@ -2382,10 +2417,44 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   }
 
   void _showImagePreview(String url) {
+    if (url.isEmpty) {
+      return;
+    }
+    FocusScope.of(context).unfocus();
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        child: Image.network(url),
+        child: Stack(
+          children: [
+            Image.network(
+              url,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.image_not_supported),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                  onTap: () {
+                    Nav().pop(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -2588,8 +2657,9 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                             //   ),
                                             // ),
                                             CachedNetworkImage(
-                                              imageUrl: profileInfo![
-                                                  'is_profile_image'],
+                                              imageUrl: profileInfo?[
+                                                      'is_profile_image'] ??
+                                                  '',
                                               placeholder: (context, url) =>
                                                   const CircleShimmer(
                                                       height: 110, width: 110),
@@ -2605,6 +2675,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                       fit: BoxFit.cover),
                                                 ),
                                               ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons
+                                                          .image_not_supported),
                                             ),
                                             Positioned(
                                               right: 4,
@@ -2630,91 +2704,99 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                 ),
                               ),
                               const VerticalSpace(height: 8.5),
-                              Center(
-                                child: Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Radio(
-                                          value: 1,
-                                          groupValue: workingType,
-                                          activeColor: primaryColor,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              workingType = value!;
-                                            });
-                                          },
-                                        ),
-                                        const Text(
-                                          'Freelancer',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                    const HorizontalSpace(width: 15),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Radio(
-                                          value: 2,
-                                          groupValue: workingType,
-                                          activeColor: primaryColor,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              workingType = value!;
-                                            });
-                                          },
-                                        ),
-                                        const Text(
-                                          'Broker',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                    const HorizontalSpace(width: 15),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Radio(
-                                          value: 3,
-                                          groupValue: workingType,
-                                          activeColor: primaryColor,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              workingType = value!;
-                                            });
-                                          },
-                                        ),
-                                        const Text(
-                                          'Telecaller',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                    const HorizontalSpace(width: 15),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Radio(
-                                          value: 4,
-                                          groupValue: workingType,
-                                          activeColor: primaryColor,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              workingType = value!;
-                                            });
-                                          },
-                                        ),
-                                        const Text(
-                                          'Employee',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Radio(
+                                            value: 1,
+                                            groupValue: workingType,
+                                            activeColor: primaryColor,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                workingType = value!;
+                                              });
+                                            },
+                                          ),
+                                          const Text(
+                                            'Freelancer',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Radio(
+                                            value: 3,
+                                            groupValue: workingType,
+                                            activeColor: primaryColor,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                workingType = value!;
+                                              });
+                                            },
+                                          ),
+                                          const Text(
+                                            'Telecaller',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const HorizontalSpace(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Radio(
+                                            value: 2,
+                                            groupValue: workingType,
+                                            activeColor: primaryColor,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                workingType = value!;
+                                              });
+                                            },
+                                          ),
+                                          const Text(
+                                            'Broker',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Radio(
+                                            value: 4,
+                                            groupValue: workingType,
+                                            activeColor: primaryColor,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                workingType = value!;
+                                              });
+                                            },
+                                          ),
+                                          const Text(
+                                            'Employee',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                               const VerticalSpace(height: 25),
                               const Text(
@@ -2727,15 +2809,18 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               TextFormField(
                                 style: const TextStyle(fontSize: 14),
                                 controller: _nameController,
+                                focusNode: _nameFocus,
                                 decoration: const InputDecoration(
                                   hintText: 'Enter Name',
                                 ),
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty ||
                                       value == null) {
+                                    _scrollToErrorField(_nameFocus);
                                     return 'Enter name';
                                   } else if (!nameRegex
                                       .hasMatch(value.toString().trim())) {
+                                    _scrollToErrorField(_nameFocus);
                                     return 'Invalid name';
                                   } else {
                                     return null;
@@ -2753,14 +2838,17 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               TextFormField(
                                 style: const TextStyle(fontSize: 14),
                                 controller: _emailController,
+                                focusNode: _emailFocus,
                                 decoration: const InputDecoration(
                                     hintText: 'Enter Mail ID'),
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty ||
                                       value == null) {
+                                    _scrollToErrorField(_emailFocus);
                                     return 'Enter mail address';
                                   } else if (!emailRegex
                                       .hasMatch(value.toString().trim())) {
+                                    _scrollToErrorField(_emailFocus);
                                     return 'Invalid mail address';
                                   } else {
                                     return null;
@@ -2779,6 +2867,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                 readOnly: true,
                                 style: const TextStyle(fontSize: 14),
                                 controller: _mobileController,
+                                focusNode: _mobileFocus,
                                 decoration: const InputDecoration(
                                     hintText: 'Enter Mobile'),
                                 validator: (value) {
@@ -2814,6 +2903,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                           onTap: _chooseDOB,
                                           style: const TextStyle(fontSize: 14),
                                           controller: _dobController,
+                                          focusNode: _dobFocus,
                                           decoration: InputDecoration(
                                             hintText: 'Enter your DOB',
                                             suffixIcon: Padding(
@@ -2831,6 +2921,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                     .trim()
                                                     .isEmpty ||
                                                 value == null) {
+                                              _scrollToErrorField(_dobFocus);
                                               return 'Enter Date of Birth';
                                             } else {
                                               return null;
@@ -2856,6 +2947,36 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                         TextFormField(
                                           style: const TextStyle(fontSize: 14),
                                           controller: _genderController,
+                                          focusNode: _genderFocus,
+                                          readOnly: true,
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  SimpleDialog(
+                                                backgroundColor: Colors.white,
+                                                surfaceTintColor: Colors.white,
+                                                clipBehavior: Clip.hardEdge,
+                                                children: [
+                                                  for (final gender in genders)
+                                                    ListTile(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          _genderController
+                                                              .text = gender;
+                                                        });
+                                                        Nav().pop(context);
+                                                      },
+                                                      title: Text(
+                                                        gender,
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            );
+                                          },
                                           decoration: const InputDecoration(
                                               hintText: 'Enter your gender'),
                                           validator: (value) {
@@ -2864,10 +2985,8 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                     .trim()
                                                     .isEmpty ||
                                                 value == null) {
+                                              _scrollToErrorField(_genderFocus);
                                               return 'Enter your gender';
-                                            } else if (!nameRegex.hasMatch(
-                                                value.toString().trim())) {
-                                              return 'Invalid gender';
                                             } else {
                                               return null;
                                             }
@@ -2889,11 +3008,13 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               TextFormField(
                                 style: const TextStyle(fontSize: 14),
                                 controller: _addressController,
+                                focusNode: _addressFocus,
                                 decoration: const InputDecoration(
                                     hintText: 'Enter Address'),
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty ||
                                       value == null) {
+                                    _scrollToErrorField(_addressFocus);
                                     return 'Enter address';
                                   } else {
                                     return null;
@@ -2920,6 +3041,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                           readOnly: true,
                                           style: const TextStyle(fontSize: 14),
                                           controller: _pincodeController,
+                                          focusNode: _pincodeFocus,
                                           decoration: InputDecoration(
                                             hintText: 'Select pincode',
                                             suffixIcon: Padding(
@@ -2958,6 +3080,8 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                     .trim()
                                                     .isEmpty ||
                                                 value == null) {
+                                              _scrollToErrorField(
+                                                  _pincodeFocus);
                                               return 'Select pincode';
                                             } else {
                                               return null;
@@ -2984,6 +3108,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                           readOnly: true,
                                           style: const TextStyle(fontSize: 14),
                                           controller: _areaController,
+                                          focusNode: _areaFocus,
                                           onTap: () {
                                             if (selectedPincode != null) {
                                               showModalBottomSheet(
@@ -3026,10 +3151,8 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                     .trim()
                                                     .isEmpty ||
                                                 value == null) {
+                                              _scrollToErrorField(_areaFocus);
                                               return 'Select area';
-                                            } else if (!nameRegex.hasMatch(
-                                                value.toString().trim())) {
-                                              return 'Invalid area';
                                             } else {
                                               return null;
                                             }
@@ -3051,15 +3174,20 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               TextFormField(
                                 style: const TextStyle(fontSize: 14),
                                 controller: _yearsOfExperienceController,
+                                focusNode: _yearsOfExperienceFocus,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
                                     hintText: 'Enter years of experience'),
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty ||
                                       value == null) {
+                                    _scrollToErrorField(
+                                        _yearsOfExperienceFocus);
                                     return 'Enter years of experience';
                                   } else if (!numberRegex
                                       .hasMatch(value.toString().trim())) {
+                                    _scrollToErrorField(
+                                        _yearsOfExperienceFocus);
                                     return 'Enter in numbers';
                                   } else {
                                     return null;
@@ -3075,6 +3203,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               ),
                               const VerticalSpace(height: 6),
                               TextFormField(
+                                focusNode: _projectsCountFocus,
                                 style: const TextStyle(fontSize: 14),
                                 controller: _projectsCountController,
                                 keyboardType: TextInputType.number,
@@ -3083,10 +3212,12 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty ||
                                       value == null) {
+                                    _scrollToErrorField(_projectsCountFocus);
                                     return 'Enter no. of projects handled';
                                   } else if (!numberRegex
                                       .hasMatch(value.toString().trim())) {
-                                    return 'Invalid mail address';
+                                    _scrollToErrorField(_projectsCountFocus);
+                                    return 'Enter in numbers';
                                   } else {
                                     return null;
                                   }
@@ -3242,7 +3373,8 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
-                                                                _uploadedPhotoLink!);
+                                                                _uploadedPhotoLink ??
+                                                                    '');
                                                           },
                                                           child: Stack(
                                                             children: [
@@ -3252,6 +3384,11 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                                 width: 70,
                                                                 fit: BoxFit
                                                                     .cover,
+                                                                errorBuilder: (context,
+                                                                        error,
+                                                                        stackTrace) =>
+                                                                    const Icon(Icons
+                                                                        .image_not_supported),
                                                               ),
                                                               const Positioned(
                                                                 right: 2,
@@ -3451,7 +3588,8 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
-                                                                _uploadedAadhaarLink!);
+                                                                _uploadedAadhaarLink ??
+                                                                    '');
                                                           },
                                                           child: Stack(
                                                             children: [
@@ -3461,6 +3599,11 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                                 width: 70,
                                                                 fit: BoxFit
                                                                     .cover,
+                                                                errorBuilder: (context,
+                                                                        error,
+                                                                        stackTrace) =>
+                                                                    const Icon(Icons
+                                                                        .image_not_supported),
                                                               ),
                                                               const Positioned(
                                                                 right: 2,
@@ -3655,7 +3798,8 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
-                                                                _uploadedPanLink!);
+                                                                _uploadedPanLink ??
+                                                                    '');
                                                           },
                                                           child: Stack(
                                                             children: [
@@ -3665,6 +3809,11 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                                 width: 70,
                                                                 fit: BoxFit
                                                                     .cover,
+                                                                errorBuilder: (context,
+                                                                        error,
+                                                                        stackTrace) =>
+                                                                    const Icon(Icons
+                                                                        .image_not_supported),
                                                               ),
                                                               const Positioned(
                                                                 right: 2,
@@ -3866,7 +4015,8 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
-                                                                _uploadedSellerLetterLink!);
+                                                                _uploadedSellerLetterLink ??
+                                                                    '');
                                                           },
                                                           child: Stack(
                                                             children: [
@@ -3876,6 +4026,11 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                                 width: 70,
                                                                 fit: BoxFit
                                                                     .cover,
+                                                                errorBuilder: (context,
+                                                                        error,
+                                                                        stackTrace) =>
+                                                                    const Icon(Icons
+                                                                        .image_not_supported),
                                                               ),
                                                               const Positioned(
                                                                 right: 2,
@@ -4295,7 +4450,14 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
-                                  onPressed: isLoading ? () {} : _updateProfile,
+                                  onPressed: isLoading
+                                      ? () {}
+                                      : workingType < 1 || workingType > 4
+                                          ? () {
+                                              Common().showToast(
+                                                  'Please work position');
+                                            }
+                                          : _updateProfile,
                                   icon: isLoading
                                       ? const ButtonLoader()
                                       : const VerticalSpace(height: 0),

@@ -164,7 +164,6 @@ class _LeaderPropertiesScreenState extends State<LeaderPropertiesScreen> {
                                       context,
                                       LeaderViewPropertyDetailScreen(
                                         projectNo: propertiesList[index]['id'],
-                                        reloadHomeContent: () {},
                                       ));
                                 },
                                 child: Container(

@@ -309,11 +309,11 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               horizontal: 6, vertical: 0),
-                                      leading: sellerList[index]['is_seller']
-                                                      ['is_business_logo'] ==
+                                      leading: sellerList[index]?['is_seller']
+                                                      ?['is_profile_image'] ==
                                                   null ||
-                                              sellerList[index]['is_seller']
-                                                      ['is_business_logo']
+                                              sellerList[index]?['is_seller']
+                                                      ?['is_profile_image']
                                                   .trim()
                                                   .isEmpty
                                           ? const Padding(
@@ -334,7 +334,7 @@ class _LeaderSelectSellerScreenState extends State<LeaderSelectSellerScreen> {
                                                 child: CachedNetworkImage(
                                                   imageUrl: sellerList[index]
                                                           ['is_seller']
-                                                      ['is_business_logo'],
+                                                      ['is_profile_image'],
                                                   placeholder: (context, url) =>
                                                       Shimmer.fromColors(
                                                     baseColor:

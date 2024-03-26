@@ -189,9 +189,9 @@ class _ExecutiveMySellerScreenState extends State<ExecutiveMySellerScreen> {
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 0),
                                     leading: mySellers[index]
-                                                    ['is_business_logo'] ==
+                                                    ['is_profile_image'] ==
                                                 null ||
-                                            mySellers[index]['is_business_logo']
+                                            mySellers[index]['is_profile_image']
                                                 .trim()
                                                 .isEmpty
                                         ? const Icon(

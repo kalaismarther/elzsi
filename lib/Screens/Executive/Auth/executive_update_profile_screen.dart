@@ -12,6 +12,7 @@ import 'package:elzsi/Widgets/common_modal.dart';
 import 'package:elzsi/utils/navigations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -52,7 +53,7 @@ class _ExecutiveUpdateProfileScreenState
         existingControllers[0][1].text =
             widget.data['created_seller']?['name'] ?? '';
         existingControllers[0][2].text =
-            widget.data['created_seller']?['mobile'] ?? '';
+            widget.data['created_seller']?['mobile']?.toString() ?? '';
       }
     });
     super.initState();
@@ -77,8 +78,38 @@ class _ExecutiveUpdateProfileScreenState
   final _pincodeController = TextEditingController();
   final _yearsOfExperienceController = TextEditingController();
 
+  //FOCUS NODES
+  final _nameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  // final _mobileFocus = FocusNode();
+  final _addressFocus = FocusNode();
+  final _projectsCountFocus = FocusNode();
+  final _dobFocus = FocusNode();
+  final _genderFocus = FocusNode();
+  final _areaFocus = FocusNode();
+  final _pincodeFocus = FocusNode();
+  final _yearsOfExperienceFocus = FocusNode();
+
+  //FUNCTION FOR SCROLLING INTO ERROR TEXT FIELD
+  void _scrollToErrorField(FocusNode focusField) {
+    FocusScope.of(context).unfocus();
+    final RenderObject renderObject = focusField.context!.findRenderObject()!;
+    final RenderAbstractViewport viewport =
+        RenderAbstractViewport.of(renderObject);
+    final double offset = viewport.getOffsetToReveal(renderObject, 0.0).offset;
+
+    _scrollController.animateTo(
+      offset - 75,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.linear,
+    );
+  }
+
   //EXECUTIVE TYPE
   int workingType = 1;
+
+  //GENDERS
+  List genders = ['Male', 'Female', 'Others'];
 
   //ADDRESS INFO
   Map? selectedPincode;
@@ -217,16 +248,20 @@ class _ExecutiveUpdateProfileScreenState
       ]);
     });
     _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.easeInOut,
+      _scrollController.position.maxScrollExtent + 375,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOut,
     );
   }
 
   //CHOOSE DOB
   void _chooseDOB() async {
     final pickedDate = await showDatePicker(
-        context: context, firstDate: DateTime(1900), lastDate: DateTime.now());
+      context: context,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(
+          DateTime.now().year - 18, DateTime.now().month, DateTime.now().day),
+    );
 
     if (pickedDate != null) {
       setState(() {
@@ -341,6 +376,7 @@ class _ExecutiveUpdateProfileScreenState
 
         if (result['status'].toString() == '1') {
           print(result);
+
           DatabaseHelper().insertDb(UserModel(
               userId: result['data']['id'],
               deviceId: widget.deviceId,
@@ -411,91 +447,97 @@ class _ExecutiveUpdateProfileScreenState
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       const VerticalSpace(height: 15),
-                      Center(
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Radio(
-                                  value: 1,
-                                  groupValue: workingType,
-                                  activeColor: primaryColor,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      workingType = value!;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  'Freelancer',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                            const HorizontalSpace(width: 15),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Radio(
-                                  value: 2,
-                                  groupValue: workingType,
-                                  activeColor: primaryColor,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      workingType = value!;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  'Broker',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                            const HorizontalSpace(width: 15),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Radio(
-                                  value: 3,
-                                  groupValue: workingType,
-                                  activeColor: primaryColor,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      workingType = value!;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  'Telecaller',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                            const HorizontalSpace(width: 15),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Radio(
-                                  value: 4,
-                                  groupValue: workingType,
-                                  activeColor: primaryColor,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      workingType = value!;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  'Employee',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Radio(
+                                    value: 1,
+                                    groupValue: workingType,
+                                    activeColor: primaryColor,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        workingType = value!;
+                                      });
+                                    },
+                                  ),
+                                  const Text(
+                                    'Freelancer',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Radio(
+                                    value: 3,
+                                    groupValue: workingType,
+                                    activeColor: primaryColor,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        workingType = value!;
+                                      });
+                                    },
+                                  ),
+                                  const Text(
+                                    'Telecaller',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const HorizontalSpace(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Radio(
+                                    value: 2,
+                                    groupValue: workingType,
+                                    activeColor: primaryColor,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        workingType = value!;
+                                      });
+                                    },
+                                  ),
+                                  const Text(
+                                    'Broker',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Radio(
+                                    value: 4,
+                                    groupValue: workingType,
+                                    activeColor: primaryColor,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        workingType = value!;
+                                      });
+                                    },
+                                  ),
+                                  const Text(
+                                    'Employee',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       const VerticalSpace(height: 15),
                       const Text(
@@ -507,15 +549,18 @@ class _ExecutiveUpdateProfileScreenState
                       TextFormField(
                         style: const TextStyle(fontSize: 14),
                         controller: _nameController,
+                        focusNode: _nameFocus,
                         decoration: const InputDecoration(
                           hintText: 'Enter Name',
                         ),
                         validator: (value) {
                           if (value.toString().trim().isEmpty ||
                               value == null) {
+                            _scrollToErrorField(_nameFocus);
                             return 'Enter name';
                           } else if (!nameRegex
                               .hasMatch(value.toString().trim())) {
+                            _scrollToErrorField(_nameFocus);
                             return 'Invalid name';
                           } else {
                             return null;
@@ -532,14 +577,17 @@ class _ExecutiveUpdateProfileScreenState
                       TextFormField(
                         style: const TextStyle(fontSize: 14),
                         controller: _emailController,
+                        focusNode: _emailFocus,
                         decoration:
                             const InputDecoration(hintText: 'Enter Mail ID'),
                         validator: (value) {
                           if (value.toString().trim().isEmpty ||
                               value == null) {
+                            _scrollToErrorField(_emailFocus);
                             return 'Enter mail address';
                           } else if (!emailRegex
                               .hasMatch(value.toString().trim())) {
+                            _scrollToErrorField(_emailFocus);
                             return 'Invalid mail address';
                           } else {
                             return null;
@@ -566,6 +614,7 @@ class _ExecutiveUpdateProfileScreenState
                                   onTap: _chooseDOB,
                                   style: const TextStyle(fontSize: 14),
                                   controller: _dobController,
+                                  focusNode: _dobFocus,
                                   decoration: InputDecoration(
                                     hintText: 'Enter your DOB',
                                     suffixIcon: Padding(
@@ -579,6 +628,7 @@ class _ExecutiveUpdateProfileScreenState
                                   validator: (value) {
                                     if (value.toString().trim().isEmpty ||
                                         value == null) {
+                                      _scrollToErrorField(_dobFocus);
                                       return 'Enter Date of Birth';
                                     } else {
                                       return null;
@@ -603,15 +653,42 @@ class _ExecutiveUpdateProfileScreenState
                                 TextFormField(
                                   style: const TextStyle(fontSize: 14),
                                   controller: _genderController,
+                                  focusNode: _genderFocus,
+                                  readOnly: true,
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => SimpleDialog(
+                                        backgroundColor: Colors.white,
+                                        surfaceTintColor: Colors.white,
+                                        clipBehavior: Clip.hardEdge,
+                                        children: [
+                                          for (final gender in genders)
+                                            ListTile(
+                                              onTap: () {
+                                                setState(() {
+                                                  _genderController.text =
+                                                      gender;
+                                                });
+                                                Nav().pop(context);
+                                              },
+                                              title: Text(
+                                                gender,
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                   decoration: const InputDecoration(
                                       hintText: 'Enter your gender'),
                                   validator: (value) {
                                     if (value.toString().trim().isEmpty ||
                                         value == null) {
+                                      _scrollToErrorField(_genderFocus);
                                       return 'Enter your gender';
-                                    } else if (!nameRegex
-                                        .hasMatch(value.toString().trim())) {
-                                      return 'Invalid gender';
                                     } else {
                                       return null;
                                     }
@@ -632,11 +709,13 @@ class _ExecutiveUpdateProfileScreenState
                       TextFormField(
                         style: const TextStyle(fontSize: 14),
                         controller: _addressController,
+                        focusNode: _addressFocus,
                         decoration:
                             const InputDecoration(hintText: 'Enter Address'),
                         validator: (value) {
                           if (value.toString().trim().isEmpty ||
                               value == null) {
+                            _scrollToErrorField(_addressFocus);
                             return 'Enter address';
                           } else {
                             return null;
@@ -662,6 +741,7 @@ class _ExecutiveUpdateProfileScreenState
                                   readOnly: true,
                                   style: const TextStyle(fontSize: 14),
                                   controller: _pincodeController,
+                                  focusNode: _pincodeFocus,
                                   decoration: InputDecoration(
                                     hintText: 'Select pincode',
                                     suffixIcon: Padding(
@@ -696,6 +776,7 @@ class _ExecutiveUpdateProfileScreenState
                                   validator: (value) {
                                     if (value.toString().trim().isEmpty ||
                                         value == null) {
+                                      _scrollToErrorField(_pincodeFocus);
                                       return 'Select pincode';
                                     } else {
                                       return null;
@@ -721,6 +802,7 @@ class _ExecutiveUpdateProfileScreenState
                                   readOnly: true,
                                   style: const TextStyle(fontSize: 14),
                                   controller: _areaController,
+                                  focusNode: _areaFocus,
                                   onTap: () {
                                     if (selectedPincode != null) {
                                       showModalBottomSheet(
@@ -760,10 +842,8 @@ class _ExecutiveUpdateProfileScreenState
                                   validator: (value) {
                                     if (value.toString().trim().isEmpty ||
                                         value == null) {
+                                      _scrollToErrorField(_areaFocus);
                                       return 'Select area';
-                                    } else if (!nameRegex
-                                        .hasMatch(value.toString().trim())) {
-                                      return 'Invalid area';
                                     } else {
                                       return null;
                                     }
@@ -784,15 +864,18 @@ class _ExecutiveUpdateProfileScreenState
                       TextFormField(
                         style: const TextStyle(fontSize: 14),
                         controller: _yearsOfExperienceController,
+                        focusNode: _yearsOfExperienceFocus,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                             hintText: 'Enter years of experience'),
                         validator: (value) {
                           if (value.toString().trim().isEmpty ||
                               value == null) {
+                            _scrollToErrorField(_yearsOfExperienceFocus);
                             return 'Enter years of experience';
                           } else if (!numberRegex
                               .hasMatch(value.toString().trim())) {
+                            _scrollToErrorField(_yearsOfExperienceFocus);
                             return 'Enter in numbers';
                           } else {
                             return null;
@@ -807,6 +890,7 @@ class _ExecutiveUpdateProfileScreenState
                       ),
                       const VerticalSpace(height: 6),
                       TextFormField(
+                        focusNode: _projectsCountFocus,
                         style: const TextStyle(fontSize: 14),
                         controller: _projectsCountController,
                         keyboardType: TextInputType.number,
@@ -815,10 +899,12 @@ class _ExecutiveUpdateProfileScreenState
                         validator: (value) {
                           if (value.toString().trim().isEmpty ||
                               value == null) {
+                            _scrollToErrorField(_projectsCountFocus);
                             return 'Enter no. of projects handled';
                           } else if (!numberRegex
                               .hasMatch(value.toString().trim())) {
-                            return 'Invalid mail address';
+                            _scrollToErrorField(_projectsCountFocus);
+                            return 'Enter in numbers';
                           } else {
                             return null;
                           }
@@ -1373,7 +1459,14 @@ class _ExecutiveUpdateProfileScreenState
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          onPressed: isLoading ? () {} : _updateProfile,
+                          onPressed: isLoading
+                              ? () {}
+                              : workingType < 1 || workingType > 4
+                                  ? () {
+                                      Common()
+                                          .showToast('Please work position');
+                                    }
+                                  : _updateProfile,
                           icon: isLoading
                               ? const ButtonLoader()
                               : const VerticalSpace(height: 0),

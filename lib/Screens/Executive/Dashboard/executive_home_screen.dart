@@ -179,13 +179,13 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
 
     final result = await Api().homeContent(data, userInfo.token, context);
 
-    if (result['status'].toString() == '1') {
+    if (result?['status'].toString() == '1') {
       setState(() {
         recentProperties.addAll(result?['data']?['projects'] ?? []);
         isLoading = false;
         paginationLoader = false;
       });
-    } else if (result['status'].toString() == '3') {
+    } else if (result?['status'].toString() == '3') {
       throw Exception('Device changed');
     } else {
       isLoading = false;
@@ -853,7 +853,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                   // )
                   paginationLoader
                       ? const Padding(
-                          padding: EdgeInsets.only(top: 5),
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
                           child: Loader(),
                         )
                       : const VerticalSpace(height: 0)

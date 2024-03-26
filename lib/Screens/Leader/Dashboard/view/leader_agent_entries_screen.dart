@@ -105,147 +105,169 @@ class _LeaderAgentEntriesScreenState extends State<LeaderAgentEntriesScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: widget.agentEntriesList.length,
-                      itemBuilder: (context, index) => Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.only(bottom: 15),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: inputBg,
-                          borderRadius: BorderRadius.circular(7),
-                          border: Border.all(color: inputBorder, width: 2),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: screenWidth * 0.68,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Customer Name : ${widget.agentEntriesList[index]?['name'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  Text(
-                                    'Customer Mobile Number : ${widget.agentEntriesList[index]?['mobile'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  if (widget.agentEntriesList[index]
-                                              ?['unit_no'] !=
-                                          null &&
-                                      widget.agentEntriesList[index]
-                                              ?['unit_id'] !=
-                                          0) ...[
+                      itemBuilder: (context, index) => InkWell(
+                        onTap: () {
+                          print(widget.agentEntriesList[index]);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(bottom: 15),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: inputBg,
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(color: inputBorder, width: 2),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: screenWidth * 0.68,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Customer Name : ${widget.agentEntriesList[index]?['name'] ?? ''}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    Text(
+                                      'Customer Mobile Number : ${widget.agentEntriesList[index]?['mobile'] ?? ''}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    if (widget.agentEntriesList[index]
+                                                ?['unit_no'] !=
+                                            null &&
+                                        widget.agentEntriesList[index]
+                                                ?['unit_id'] !=
+                                            0) ...[
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Unit no : ${widget.agentEntriesList[index]?['unit_no'] ?? ''} - ',
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                          Text(
+                                            widget.agentEntriesList[index]
+                                                    ?['unit_status'] ??
+                                                '',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: widget.agentEntriesList[
+                                                                index]
+                                                                ?['unit_status']
+                                                            ?.toString() ==
+                                                        'AVAILABLE'
+                                                    ? Colors.red
+                                                    : widget.agentEntriesList[
+                                                                    index]?[
+                                                                    'unit_status']
+                                                                ?.toString() ==
+                                                            'BOOKED'
+                                                        ? Colors.blue
+                                                        : widget.agentEntriesList[
+                                                                        index]?[
+                                                                        'unit_status']
+                                                                    ?.toString() ==
+                                                                'SOLD OUT'
+                                                            ? Colors.green
+                                                            : Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      const VerticalSpace(height: 5),
+                                      Text(
+                                        'Block name: ${widget.agentEntriesList[index]?['block_name'] ?? ''}',
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      const VerticalSpace(height: 5),
+                                      Text(
+                                        'Phase name: ${widget.agentEntriesList[index]?['phases'] ?? ''}',
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      const VerticalSpace(height: 5),
+                                    ],
+                                    Text(
+                                      'Call / Visit : ${widget.agentEntriesList[index]?['is_sourceby'] ?? ''}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    Text(
+                                      'Comments : ${widget.agentEntriesList[index]?['agent_remind_comments'] ?? ''}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    Text(
+                                      'Entry Date : ${_formatDate1(widget.agentEntriesList[index]?['enquired_at'] ?? '')}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    Text(
+                                      'Reminder Date : ${_formatDate(widget.agentEntriesList[index]?['agent_remind_date'] ?? '')}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 5),
+                                    Text(
+                                      'Status : ${widget.agentEntriesList[index]?['status'] ?? ''}',
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const VerticalSpace(height: 6),
                                     Row(
-                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
-                                          'Unit no : ${widget.agentEntriesList[index]?['unit_no'] ?? ''} - ',
-                                          style: const TextStyle(fontSize: 12),
+                                        const Text(
+                                          'Entry by : ',
+                                          style: TextStyle(fontSize: 12),
                                         ),
                                         Text(
-                                          widget.agentEntriesList[index]
-                                                  ?['unit_status'] ??
-                                              '',
-                                          style: TextStyle(
+                                          '${widget.agentEntriesList[index]?['agent_details']?['agent_name'] ?? ''} (Executive)',
+                                          style: const TextStyle(
                                               fontSize: 12,
-                                              color: widget.agentEntriesList[
-                                                              index]
-                                                              ?['unit_status']
-                                                          ?.toString() ==
-                                                      'AVAILABLE'
-                                                  ? Colors.red
-                                                  : widget.agentEntriesList[
-                                                                  index]?[
-                                                                  'unit_status']
-                                                              ?.toString() ==
-                                                          'BOOKED'
-                                                      ? Colors.blue
-                                                      : widget.agentEntriesList[
-                                                                      index]?[
-                                                                      'unit_status']
-                                                                  ?.toString() ==
-                                                              'SOLD OUT'
-                                                          ? Colors.green
-                                                          : Colors.black),
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
                                     const VerticalSpace(height: 5),
-                                    Text(
-                                      'Block name: ${widget.agentEntriesList[index]?['block_name'] ?? ''}',
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                    const VerticalSpace(height: 5),
-                                    Text(
-                                      'Phase name: ${widget.agentEntriesList[index]?['phases'] ?? ''}',
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                    const VerticalSpace(height: 5),
                                   ],
-                                  Text(
-                                    'Call / Visit : ${widget.agentEntriesList[index]?['is_sourceby'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  Text(
-                                    'Comments : ${widget.agentEntriesList[index]?['agent_remind_comments'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  Text(
-                                    'Entry Date : ${_formatDate1(widget.agentEntriesList[index]?['enquired_at'] ?? '')}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  Text(
-                                    'Reminder Date : ${_formatDate(widget.agentEntriesList[index]?['agent_remind_date'] ?? '')}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                  Text(
-                                    'Status : ${widget.agentEntriesList[index]?['status'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const VerticalSpace(height: 5),
-                                ],
+                                ),
                               ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    _goToCorrespondingApp(
-                                        'tel',
-                                        widget.agentEntriesList[index]
-                                                ?['mobile'] ??
-                                            '');
-                                  },
-                                  icon: Image.asset(
-                                    'assets/images/phone.png',
-                                    height: 28,
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      _goToCorrespondingApp(
+                                          'tel',
+                                          widget.agentEntriesList[index]
+                                                  ?['mobile'] ??
+                                              '');
+                                    },
+                                    icon: Image.asset(
+                                      'assets/images/phone.png',
+                                      height: 28,
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    _goToCorrespondingApp(
-                                        'whatsapp',
-                                        widget.agentEntriesList[index]
-                                                ?['mobile'] ??
-                                            '');
-                                  },
-                                  icon: Image.asset(
-                                    'assets/images/whatsapp.png',
-                                    height: 28,
+                                  IconButton(
+                                    onPressed: () {
+                                      _goToCorrespondingApp(
+                                          'whatsapp',
+                                          widget.agentEntriesList[index]
+                                                  ?['mobile'] ??
+                                              '');
+                                    },
+                                    icon: Image.asset(
+                                      'assets/images/whatsapp.png',
+                                      height: 28,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
-                          ],
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

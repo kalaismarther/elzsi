@@ -314,9 +314,9 @@ class _LeaderVerificationScreenState extends State<LeaderVerificationScreen> {
                               return null;
                             }
                           },
-                          onCompleted: (value) {
-                            _verifyOTP();
-                          },
+                          // onCompleted: (value) {
+                          //   _verifyOTP();
+                          // },
                         ),
                       ),
                     ),
