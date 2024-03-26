@@ -2408,11 +2408,14 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         ),
       ),
     );
-    _openPDF(title, await PDF().loadNetwork(url));
+    _openPDF(title, await PDF().loadNetwork(url) ?? File(''));
   }
 
   void _openPDF(String title, File pdf) {
     Nav().pop(context);
+    if (pdf.path.isEmpty) {
+      return;
+    }
     Nav().push(context, ViewPdfScreen(appTitle: title, file: pdf));
   }
 
@@ -2476,27 +2479,19 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         backgroundColor: primaryColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () {
+          leading: IconButton(
+            onPressed: () {
               Nav().pop(context);
               // widget.reloadHomeContent();
             },
-            child: Row(
-              children: [
-                const HorizontalSpace(width: 9),
-                Image.asset(
-                  'assets/images/prev.png',
-                  height: 17,
-                ),
-                const HorizontalSpace(width: 15),
-                const Text(
-                  'My Profile',
-                  style: TextStyle(color: Colors.white, fontSize: 17.5),
-                ),
-              ],
+            icon: Image.asset(
+              'assets/images/prev.png',
+              height: 17,
             ),
+          ),
+          title: const Text(
+            'My Profile',
+            style: TextStyle(color: Colors.white, fontSize: 17.5),
           ),
         ),
         body: Container(

@@ -114,7 +114,6 @@ class _SellersState extends State<Sellers> {
                     onTap: () {
                       widget.onSelect(sellersList[index]);
                       Nav().pop(context);
-                      print(sellersList[index]);
                     },
                     leading: sellersList[index]?['is_profile_image'] == null ||
                             sellersList[index]?['is_profile_image'].isEmpty
@@ -140,7 +139,7 @@ class _SellersState extends State<Sellers> {
                               ),
                             ),
                             placeholder: (context, url) =>
-                                const CircleShimmer(height: 25, width: 25),
+                                const CircleShimmer(height: 35, width: 35),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
                           ),

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:elzsi/Utils/colors.dart';
-import 'package:elzsi/Utils/horizontalspace.dart';
+// import 'package:elzsi/Utils/horizontalspace.dart';
 import 'package:elzsi/Utils/navigations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -26,26 +26,19 @@ class _ViewPdfScreenState extends State<ViewPdfScreen> {
       backgroundColor: primaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () {
+        leading: IconButton(
+          onPressed: () {
             Nav().pop(context);
+            // widget.reloadHomeContent();
           },
-          child: Row(
-            children: [
-              const HorizontalSpace(width: 9),
-              Image.asset(
-                'assets/images/prev.png',
-                height: 17,
-              ),
-              const HorizontalSpace(width: 15),
-              Text(
-                widget.appTitle,
-                style: const TextStyle(color: Colors.white, fontSize: 17.5),
-              ),
-            ],
+          icon: Image.asset(
+            'assets/images/prev.png',
+            height: 17,
           ),
+        ),
+        title: Text(
+          widget.appTitle,
+          style: const TextStyle(color: Colors.white, fontSize: 17.5),
         ),
       ),
       body: Container(
@@ -65,10 +58,12 @@ class _ViewPdfScreenState extends State<ViewPdfScreen> {
               : PDFView(
                   filePath: widget.file.path,
                   onPageChanged: (page, total) {
-                    setState(() {
-                      currentPageNo = page! + 1;
-                      totalPageNo = total!;
-                    });
+                    if (page != null && total != null) {
+                      setState(() {
+                        currentPageNo = page + 1;
+                        totalPageNo = total;
+                      });
+                    } else {}
                   },
                 ),
         ),

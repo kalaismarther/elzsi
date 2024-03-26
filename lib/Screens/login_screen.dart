@@ -237,7 +237,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                         ),
-                      )
+                      ),
+                      const VerticalSpace(height: 20),
                     ],
                   ),
                 )

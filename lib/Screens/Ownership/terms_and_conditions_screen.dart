@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:elzsi/Api/urls.dart';
 import 'package:elzsi/Utils/colors.dart';
-import 'package:elzsi/Utils/horizontalspace.dart';
+// import 'package:elzsi/Utils/horizontalspace.dart';
 import 'package:elzsi/utils/navigations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -49,26 +49,19 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
       backgroundColor: primaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () {
+        leading: IconButton(
+          onPressed: () {
             Nav().pop(context);
+            // widget.reloadHomeContent();
           },
-          child: Row(
-            children: [
-              const HorizontalSpace(width: 9),
-              Image.asset(
-                'assets/images/prev.png',
-                height: 17,
-              ),
-              const HorizontalSpace(width: 15),
-              const Text(
-                'Terms and Conditions',
-                style: TextStyle(color: Colors.white, fontSize: 17.5),
-              ),
-            ],
+          icon: Image.asset(
+            'assets/images/prev.png',
+            height: 17,
           ),
+        ),
+        title: const Text(
+          'Terms and Conditions',
+          style: TextStyle(color: Colors.white, fontSize: 17.5),
         ),
       ),
       body: Container(

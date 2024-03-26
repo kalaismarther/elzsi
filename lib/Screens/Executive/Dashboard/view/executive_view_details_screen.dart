@@ -99,26 +99,19 @@ class _ExecutiveViewDetailsScreenState
       backgroundColor: primaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () {
+        leading: IconButton(
+          onPressed: () {
             Nav().pop(context);
+            // widget.reloadHomeContent();
           },
-          child: Row(
-            children: [
-              const HorizontalSpace(width: 9),
-              Image.asset(
-                'assets/images/prev.png',
-                height: 17,
-              ),
-              const HorizontalSpace(width: 15),
-              const Text(
-                'View Details',
-                style: TextStyle(color: Colors.white, fontSize: 17.5),
-              ),
-            ],
+          icon: Image.asset(
+            'assets/images/prev.png',
+            height: 17,
           ),
+        ),
+        title: const Text(
+          'View Details',
+          style: TextStyle(color: Colors.white, fontSize: 17.5),
         ),
       ),
       body: Container(

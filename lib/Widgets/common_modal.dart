@@ -199,11 +199,15 @@ class _CommonModalState extends State<CommonModal> {
               fillColor: Colors.grey.shade300,
               hintText:
                   widget.type == 'pincodes' ? 'Search Pincode' : 'Search Area',
-              border: const OutlineInputBorder(borderSide: BorderSide.none),
-              enabledBorder:
-                  const OutlineInputBorder(borderSide: BorderSide.none),
-              focusedBorder:
-                  const OutlineInputBorder(borderSide: BorderSide.none),
+              border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(8)),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(8)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(8)),
             ),
             onChanged: (value) {
               _search();
