@@ -76,8 +76,6 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
       });
     } else if (result['status'].toString() == '3') {
       throw Exception('Device changed');
-    } else {
-      throw Exception('Failed to fetch data');
     }
   }
 
