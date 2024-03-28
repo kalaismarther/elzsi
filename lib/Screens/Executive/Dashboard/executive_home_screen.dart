@@ -512,7 +512,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                     child: ListTile(
                       onTap: () {
                         Share.share(
-                            'Check out Elzsi Task Manager App on \n\n Play Store : https://play.google.com/store/apps/details?id=com.smart.elzsimanager \n\n App Store : ');
+                            'Check out Elzsi Task Manager App on Play Store : https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
                       },
                       leading: Image.asset(
                         'assets/images/share.png',
