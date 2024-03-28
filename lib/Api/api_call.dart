@@ -13,6 +13,8 @@ class Api {
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -25,6 +27,8 @@ class Api {
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -36,6 +40,8 @@ class Api {
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -54,6 +60,28 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
+    }
+  }
+
+  Future notify(data, token, context) async {
+    String url = liveURL + notificationUrl;
+
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json', 'x-api-key': token},
+        body: json.encode(data));
+
+    if (response.statusCode == 200) {
+      print(json.decode(response.body));
+      if (json.decode(response.body)['status'].toString() == '3') {
+        Common().showToast('Session Expired');
+        Common().logout(context);
+      } else {
+        return json.decode(response.body);
+      }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -72,6 +100,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -90,6 +120,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -107,6 +139,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -124,6 +158,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -142,6 +178,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -160,6 +198,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -178,6 +218,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -196,6 +238,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -214,6 +258,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -231,6 +277,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -248,6 +296,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -265,6 +315,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -282,6 +334,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
@@ -300,12 +354,14 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 
   //LOGOUT
   Future logout(data, token, context) async {
-    String url = liveURL + executivesListUrl;
+    String url = liveURL + logoutUrl;
 
     final response = await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json', 'x-api-key': token},
@@ -318,6 +374,8 @@ class Api {
       } else {
         return json.decode(response.body);
       }
+    } else {
+      throw Exception('Something went wrong');
     }
   }
 }

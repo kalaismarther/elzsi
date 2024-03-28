@@ -36,6 +36,8 @@ class ExecutiveHomeScreen extends StatefulWidget {
 class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
   late Future _home;
 
+  int notificationCount = 0;
+
   //CONTROLLERS
   final _scrollController = ScrollController();
 
@@ -51,6 +53,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
   @override
   void initState() {
     _home = _homeContent();
+    _notify();
     // _checkUpdate();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
@@ -193,6 +196,36 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
     }
   }
 
+  //FUNCTION FOR CHECKING NOTIFICATION EXISTS OR NOT
+  Future<void> _notify() async {
+    final userInfo = await DatabaseHelper().initDb();
+    if (!context.mounted) {
+      return;
+    }
+
+    var data = {"user_id": userInfo.userId};
+
+    try {
+      final result = await Api().notify(data, userInfo.token, context);
+
+      if (result['status'].toString() == '1') {
+        try {
+          setState(() {
+            notificationCount = result?['data'] ?? 0;
+          });
+        } catch (e) {
+          //
+        }
+      } else if (result['status'].toString() == '3') {
+        throw Exception('Device changed');
+      } else if (result['status'].toString() == '0') {
+        Common().showToast(result?['message'] ?? 'Something went wrong');
+      }
+    } catch (e) {
+      //
+    }
+  }
+
   //FOR RELOADING HOME CONTENT
   void _reload() {
     setState(() {
@@ -200,6 +233,7 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
       isLoading = true;
     });
     _homeContent();
+    _notify();
   }
 
   //LOGOUT
@@ -217,7 +251,8 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
     };
 
     try {
-      final result = await Api().homeContent(data, userInfo.token, context);
+      final result = await Api().logout(data, userInfo.token, context);
+      print(result);
 
       if (result['status'].toString() == '1') {
         if (!context.mounted) {
@@ -297,10 +332,15 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
                                 const ExecutiveNotificationScreen()));
                     _reload();
                   },
-                  icon: Image.asset(
-                    'assets/images/notification.png',
-                    height: 36,
-                  ),
+                  icon: notificationCount > 0
+                      ? Image.asset(
+                          'assets/images/notification-exists.png',
+                          height: 36,
+                        )
+                      : Image.asset(
+                          'assets/images/notification.png',
+                          height: 36,
+                        ),
                 ),
               )
             ],

@@ -40,6 +40,8 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
 
   late Future _home;
 
+  int notificationCount = 0;
+
   //CONTROLLERS
   final _scrollController = ScrollController();
 
@@ -178,22 +180,58 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
       return;
     }
 
-    var data = {"user_id": userInfo.userId, "page_no": recentProperties.length};
-    print(data);
+    try {
+      var data = {
+        "user_id": userInfo.userId,
+        "page_no": recentProperties.length
+      };
 
-    final result = await Api().homeContent(data, userInfo.token, context);
+      final result = await Api().homeContent(data, userInfo.token, context);
 
-    if (result['status'].toString() == '1') {
-      setState(() {
-        recentProperties.addAll(result?['data']?['projects'] ?? []);
+      if (result['status'].toString() == '1') {
+        setState(() {
+          recentProperties.addAll(result?['data']?['projects'] ?? []);
+          isLoading = false;
+          paginationLoader = false;
+        });
+      } else if (result['status'].toString() == '3') {
+        throw Exception('Device changed');
+      } else {
         isLoading = false;
-        paginationLoader = false;
-      });
-    } else if (result['status'].toString() == '3') {
-      throw Exception('Device changed');
-    } else {
-      isLoading = false;
-      throw Exception('Failed to load recent properties');
+        throw Exception('Failed to load recent properties');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //FUNCTION FOR CHECKING NOTIFICATION EXISTS OR NOT
+  Future<void> _notify() async {
+    final userInfo = await DatabaseHelper().initDb();
+    if (!context.mounted) {
+      return;
+    }
+
+    var data = {"user_id": userInfo.userId};
+
+    try {
+      final result = await Api().notify(data, userInfo.token, context);
+
+      if (result['status'].toString() == '1') {
+        try {
+          setState(() {
+            notificationCount = result?['data'] ?? 0;
+          });
+        } catch (e) {
+          //
+        }
+      } else if (result['status'].toString() == '3') {
+        throw Exception('Device changed');
+      } else if (result['status'].toString() == '0') {
+        Common().showToast(result?['message'] ?? 'Something went wrong');
+      }
+    } catch (e) {
+      //
     }
   }
 
@@ -204,6 +242,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
       isLoading = true;
     });
     _homeContent();
+    _notify();
   }
 
   //LOGOUT
@@ -221,7 +260,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
     };
 
     try {
-      final result = await Api().homeContent(data, userInfo.token, context);
+      final result = await Api().logout(data, userInfo.token, context);
 
       if (result['status'].toString() == '1') {
         if (!context.mounted) {
@@ -241,6 +280,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
       if (!context.mounted) {
         return;
       }
+
       Nav().pop(context);
       Common().showToast('Failed to logout');
     }
@@ -249,6 +289,7 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
   @override
   void initState() {
     _home = _homeContent();
+    _notify();
     // _checkUpdate();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
@@ -319,10 +360,15 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
                                 const LeaderNotificationScreen()));
                     _reload();
                   },
-                  icon: Image.asset(
-                    'assets/images/notification.png',
-                    height: 36,
-                  ),
+                  icon: notificationCount > 0
+                      ? Image.asset(
+                          'assets/images/notification-exists.png',
+                          height: 36,
+                        )
+                      : Image.asset(
+                          'assets/images/notification.png',
+                          height: 36,
+                        ),
                 ),
               )
             ],

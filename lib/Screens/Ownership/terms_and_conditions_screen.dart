@@ -22,15 +22,23 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
   String? termsAndConditions;
 
   Future<void> _getTermsAndConditions() async {
-    final response = await http.post(Uri.parse('${liveURL}page/terms'));
+    try {
+      final response = await http.post(Uri.parse('${liveURL}page/terms'));
 
-    var result = json.decode(response.body);
-    if (result['status'].toString() == '1') {
-      setState(() {
-        termsAndConditions = result['data'];
-      });
-    } else {
-      throw Exception('Failed');
+      if (response.statusCode == 200) {
+        var result = json.decode(response.body);
+        if (result['status'].toString() == '1') {
+          setState(() {
+            termsAndConditions = result['data'];
+          });
+        } else {
+          throw Exception('Failed');
+        }
+      } else {
+        throw Exception('Something went wrong');
+      }
+    } catch (e) {
+      //
     }
   }
 
@@ -83,7 +91,9 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                 color: primaryColor,
               );
             } else if (snapshot.hasError) {
-              return const Center(child: Text('Failed to fetch data'));
+              return const Center(
+                child: Text('Failed to fetch data'),
+              );
             } else {
               return SingleChildScrollView(
                   child: Html(data: termsAndConditions ?? ''));

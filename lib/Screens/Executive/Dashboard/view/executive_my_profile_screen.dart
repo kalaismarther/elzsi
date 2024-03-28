@@ -2141,25 +2141,28 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
 
         var response = await request.send();
 
-        var responseBody = await response.stream.bytesToString();
+        if (response.statusCode == 200) {
+          var responseBody = await response.stream.bytesToString();
 
-        var result = json.decode(responseBody);
-        print(json.decode(responseBody));
+          var result = json.decode(responseBody);
 
-        if (result['status'].toString() == '1') {
-          setState(() {
-            isLoading = false;
-          });
-          Common().showToast(result['message']);
-          if (!context.mounted) {
-            return;
+          if (result['status'].toString() == '1') {
+            setState(() {
+              isLoading = false;
+            });
+            Common().showToast(result['message']);
+            if (!context.mounted) {
+              return;
+            }
+            Nav().pop(context);
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            Common().showToast(result['message']);
           }
-          Nav().pop(context);
         } else {
-          setState(() {
-            isLoading = false;
-          });
-          Common().showToast(result['message']);
+          throw Exception('Something went wrong');
         }
       } catch (e) {
         setState(() {
@@ -2168,7 +2171,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
         if (!context.mounted) {
           return;
         }
-        print(e);
+
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Something Went Wrong')));
       }
@@ -2383,7 +2386,9 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
       if (!context.mounted) {
         return;
       }
-
+      setState(() {
+        dpLoading = false;
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Something Went Wrong')));
     }
@@ -3167,11 +3172,13 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               ),
                               const VerticalSpace(height: 6),
                               TextFormField(
+                                maxLength: 3,
                                 style: const TextStyle(fontSize: 14),
                                 controller: _yearsOfExperienceController,
                                 focusNode: _yearsOfExperienceFocus,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
+                                    counterText: '',
                                     hintText: 'Enter years of experience'),
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty ||
@@ -3198,11 +3205,13 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                               ),
                               const VerticalSpace(height: 6),
                               TextFormField(
+                                maxLength: 6,
                                 focusNode: _projectsCountFocus,
                                 style: const TextStyle(fontSize: 14),
                                 controller: _projectsCountController,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
+                                    counterText: '',
                                     hintText: 'No. of Projects Handled'),
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty ||

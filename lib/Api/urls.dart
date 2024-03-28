@@ -6,6 +6,7 @@ String updateProfileUrl = 'update_agent_profile';
 String getAreasUrl = 'getareas';
 String getPincodesUrl = 'getpincodes';
 String homeContentUrl = 'agent_homecontents';
+String notificationUrl = 'notify';
 String getNotificationsUrl = 'getnotifications';
 String getSellerUrl = 'agent_get_sellers';
 String requestSellerUrl = 'agent_request_seller';

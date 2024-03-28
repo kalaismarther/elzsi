@@ -96,6 +96,7 @@ flutter:
     - assets/images/plus-btn.png
     - assets/images/calendar.png
     - assets/images/notification.png
+    - assets/images/notification-exists.png
     - assets/images/menu.png
     - assets/images/prev.png
     - assets/images/next.png

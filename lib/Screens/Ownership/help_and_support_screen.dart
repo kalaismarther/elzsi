@@ -23,15 +23,24 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
   Map? info;
 
   Future<void> _getHelpAndContactSupport() async {
-    final response = await http.post(Uri.parse('${liveURL}help'));
+    try {
+      final response = await http.post(Uri.parse('${liveURL}help'));
 
-    var result = json.decode(response.body);
-    if (result['status'].toString() == '1') {
-      setState(() {
-        info = result['data'];
-      });
-    } else {
-      throw Exception('Failed');
+      if (response.statusCode == 200) {
+        var result = json.decode(response.body);
+        if (result['status'].toString() == '1') {
+          setState(() {
+            info = result['data'];
+          });
+        } else {
+          throw Exception('Failed');
+        }
+      } else {
+        throw Exception('Something went wrong');
+      }
+    } catch (e) {
+      print(e);
+      //
     }
   }
 

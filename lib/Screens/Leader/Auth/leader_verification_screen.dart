@@ -374,7 +374,7 @@ class _LeaderVerificationScreenState extends State<LeaderVerificationScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _verifyOTP,
+                        onPressed: isLoading ? () {} : _verifyOTP,
                         child: isLoading
                             ? const ButtonLoader()
                             : const Text(

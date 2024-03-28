@@ -75,81 +75,94 @@ class _CommonModalState extends State<CommonModal> {
   }
 
   Future<void> _getAreas() async {
-    setState(() {
-      pageNo = list.length;
-    });
-    final userInfo = await DatabaseHelper().initDb();
-
-    var data = {
-      "user_id": widget.userId ?? userInfo.userId,
-      "pincode_id": widget.chosenPincode!['id'],
-      "search": _searchController.text,
-      "page_no": list.length
-    };
-
-    if (!context.mounted) {
-      return;
-    }
-    final result =
-        await Api().getAreas(data, widget.token ?? userInfo.token, context);
-    print(result);
-
-    if (result['status'].toString() == '1') {
+    try {
       setState(() {
-        list.addAll(result['data']);
-        isLoading = false;
-        paginationLoader = false;
+        pageNo = list.length;
       });
-    } else if (result['status'].toString() == '3') {
-      throw Exception('Device changed');
-    } else if (result['data'] == null || result['data'].isEmpty) {
+      final userInfo = await DatabaseHelper().initDb();
+
+      var data = {
+        "user_id": widget.userId ?? userInfo.userId,
+        "pincode_id": widget.chosenPincode!['id'],
+        "search": _searchController.text,
+        "page_no": list.length
+      };
+
+      if (!context.mounted) {
+        return;
+      }
+      final result =
+          await Api().getAreas(data, widget.token ?? userInfo.token, context);
+      print(result);
+
+      if (result['status'].toString() == '1') {
+        setState(() {
+          list.addAll(result?['data'] ?? []);
+          isLoading = false;
+          paginationLoader = false;
+        });
+      } else if (result['status'].toString() == '3') {
+        throw Exception('Device changed');
+      } else if (result['data'] == null || result['data'].isEmpty) {
+        setState(() {
+          list.addAll(result?['data'] ?? []);
+          isLoading = false;
+          paginationLoader = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+          message = result?['messge'] ?? '';
+        });
+      }
+    } catch (e) {
+      //
       setState(() {
-        list.addAll(result?['data'] ?? []);
         isLoading = false;
-        paginationLoader = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-        message = result?['messge'] ?? '';
       });
     }
   }
 
   Future<void> _getPincodes() async {
-    setState(() {
-      pageNo = list.length;
-    });
-    final userInfo = await DatabaseHelper().initDb();
-
-    var data = {
-      "user_id": widget.userId ?? userInfo.userId,
-      "search": _searchController.text,
-      "page_no": list.length
-    };
-    print(data);
-    if (!context.mounted) {
-      return;
-    }
-    final result =
-        await Api().getPincodes(data, widget.token ?? userInfo.token, context);
-    print(result);
-
-    if (result['status'].toString() == '1') {
+    try {
       setState(() {
-        list.addAll(result['data']);
-        isLoading = false;
-        paginationLoader = false;
+        pageNo = list.length;
       });
-    } else if (result['status'].toString() == '3') {
-      throw Exception('Device changed');
-    } else if (result['data'] == null || result['data'].isEmpty) {
-      setState(() {
-        list.addAll(result?['data'] ?? []);
-        isLoading = false;
-        paginationLoader = false;
-      });
-    } else {
+      final userInfo = await DatabaseHelper().initDb();
+
+      var data = {
+        "user_id": widget.userId ?? userInfo.userId,
+        "search": _searchController.text,
+        "page_no": list.length
+      };
+      print(data);
+      if (!context.mounted) {
+        return;
+      }
+      final result = await Api()
+          .getPincodes(data, widget.token ?? userInfo.token, context);
+      print(result);
+
+      if (result['status'].toString() == '1') {
+        setState(() {
+          list.addAll(result?['data'] ?? []);
+          isLoading = false;
+          paginationLoader = false;
+        });
+      } else if (result['status'].toString() == '3') {
+        throw Exception('Device changed');
+      } else if (result['data'] == null || result['data'].isEmpty) {
+        setState(() {
+          list.addAll(result?['data'] ?? []);
+          isLoading = false;
+          paginationLoader = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
       setState(() {
         isLoading = false;
       });
@@ -224,8 +237,7 @@ class _CommonModalState extends State<CommonModal> {
                 title: WaitingShimmer(count: 5, height: 38),
               );
             } else if (snapshot.hasError) {
-              return Center(
-                  child: Text('Failed to fetch data ${snapshot.error}'));
+              return const Center(child: Text('Failed to fetch data'));
             } else {
               return isLoading
                   ? const Loader()

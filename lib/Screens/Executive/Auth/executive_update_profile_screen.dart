@@ -369,34 +369,37 @@ class _ExecutiveUpdateProfileScreenState
         }
 
         var response = await request.send();
-        var responseBody = await response.stream.bytesToString();
-        print(json.decode(responseBody));
-        var result = json.decode(responseBody);
-        print(result);
+        if (response.statusCode == 200) {
+          var responseBody = await response.stream.bytesToString();
 
-        if (result['status'].toString() == '1') {
-          print(result);
+          var result = json.decode(responseBody);
 
-          DatabaseHelper().insertDb(UserModel(
-              userId: result['data']['id'],
-              deviceId: widget.deviceId,
-              token: result['data']['api_token'],
-              fcmToken: widget.fcmToken));
-          await pref.setBool('loggedIn', true);
-          await pref.setBool('executiveLogin', true);
-          if (!context.mounted) {
-            return;
+          if (result['status'].toString() == '1') {
+            print(result);
+
+            DatabaseHelper().insertDb(UserModel(
+                userId: result['data']['id'],
+                deviceId: widget.deviceId,
+                token: result['data']['api_token'],
+                fcmToken: widget.fcmToken));
+            await pref.setBool('loggedIn', true);
+            await pref.setBool('executiveLogin', true);
+            if (!context.mounted) {
+              return;
+            }
+            setState(() {
+              isLoading = false;
+            });
+            Common().showToast(result['message']);
+            Nav().replace(context, const ExecutiveHomeScreen());
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            Common().showToast(result['message']);
           }
-          setState(() {
-            isLoading = false;
-          });
-          Common().showToast(result['message']);
-          Nav().replace(context, const ExecutiveHomeScreen());
         } else {
-          setState(() {
-            isLoading = false;
-          });
-          Common().showToast(result['message']);
+          throw Exception('Something went wrong');
         }
       } catch (e) {
         setState(() {
@@ -862,11 +865,13 @@ class _ExecutiveUpdateProfileScreenState
                       ),
                       const VerticalSpace(height: 6),
                       TextFormField(
+                        maxLength: 3,
                         style: const TextStyle(fontSize: 14),
                         controller: _yearsOfExperienceController,
                         focusNode: _yearsOfExperienceFocus,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
+                            counterText: '',
                             hintText: 'Enter years of experience'),
                         validator: (value) {
                           if (value.toString().trim().isEmpty ||
@@ -890,11 +895,13 @@ class _ExecutiveUpdateProfileScreenState
                       ),
                       const VerticalSpace(height: 6),
                       TextFormField(
+                        maxLength: 6,
                         focusNode: _projectsCountFocus,
                         style: const TextStyle(fontSize: 14),
                         controller: _projectsCountController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
+                            counterText: '',
                             hintText: 'No. of Projects Handled'),
                         validator: (value) {
                           if (value.toString().trim().isEmpty ||
