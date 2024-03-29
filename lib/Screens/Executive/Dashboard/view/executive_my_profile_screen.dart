@@ -1918,20 +1918,99 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
     return dateTime;
   }
 
-  //CHOOSE PHOTO
-  void _choosePhoto() async {
-    try {
-      FilePickerResult? pickedPhoto = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+  void chooseDocumentAlert(String type) {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          ListTile(
+            onTap: () {
+              if (type == 'photo') {
+                Nav().pop(context);
+                _choosePhoto('gallery');
+              } else if (type == 'aadhaar') {
+                Nav().pop(context);
+                _chooseAadhaar('gallery');
+              } else if (type == 'pan') {
+                Nav().pop(context);
+                _choosePan('gallery');
+              } else if (type == 'sellerletter') {
+                Nav().pop(context);
+                _chooseSellerLetter('gallery');
+              }
+            },
+            leading: const Icon(
+              Icons.image,
+              color: Colors.black,
+            ),
+            title: const Text(
+              'Choose Image',
+              style: TextStyle(color: Colors.black, fontSize: 14),
+            ),
+          ),
+          ListTile(
+            onTap: () {
+              if (type == 'photo') {
+                Nav().pop(context);
+                _choosePhoto('filemanager');
+              } else if (type == 'aadhaar') {
+                Nav().pop(context);
+                _chooseAadhaar('filemanager');
+              } else if (type == 'pan') {
+                Nav().pop(context);
+                _choosePan('filemanager');
+              } else if (type == 'sellerletter') {
+                Nav().pop(context);
+                _chooseSellerLetter('filemanager');
+              }
+            },
+            leading: const Icon(
+              Icons.sim_card_rounded,
+              color: Colors.black,
+            ),
+            title: const Text(
+              'Choose PDF',
+              style: TextStyle(color: Colors.black, fontSize: 14),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-      if (pickedPhoto != null) {
-        setState(() {
-          _photo = File(pickedPhoto.files.single.path!);
-          _photoName = pickedPhoto.names[0].toString();
-          photoSource = 'offline';
-        });
+  //CHOOSE PHOTO
+  void _choosePhoto(String source) async {
+    try {
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _photo = File(pickedImage.path);
+            _photoName = pickedImage.name;
+            photoSource = 'offline';
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+
+        if (pickedPdf != null) {
+          setState(() {
+            _photo = File(pickedPdf.files.single.path!);
+            _photoName = pickedPdf.names[0].toString();
+            photoSource = 'offline';
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -1943,19 +2022,37 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   }
 
   //CHOOSE AADHAAR
-  void _chooseAadhaar() async {
+  void _chooseAadhaar(String source) async {
     try {
-      FilePickerResult? pickedAadhaar = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _aadhaar = File(pickedImage.path);
+            _aadhaarName = pickedImage.name;
+            aadhaarSource = 'offline';
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
 
-      if (pickedAadhaar != null) {
-        setState(() {
-          _aadhaar = File(pickedAadhaar.files.single.path!);
-          _aadhaarName = pickedAadhaar.names[0].toString();
-          aadhaarSource = 'offline';
-        });
+        if (pickedPdf != null) {
+          setState(() {
+            _aadhaar = File(pickedPdf.files.single.path!);
+            _aadhaarName = pickedPdf.names[0].toString();
+            aadhaarSource = 'offline';
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -1967,19 +2064,37 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   }
 
   //CHOOSE PAN
-  void _choosePan() async {
+  void _choosePan(String source) async {
     try {
-      FilePickerResult? pickedPan = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _pan = File(pickedImage.path);
+            _panName = pickedImage.name;
+            panSource = 'offline';
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
 
-      if (pickedPan != null) {
-        setState(() {
-          _pan = File(pickedPan.files.single.path!);
-          _panName = pickedPan.names[0].toString();
-          panSource = 'offline';
-        });
+        if (pickedPdf != null) {
+          setState(() {
+            _pan = File(pickedPdf.files.single.path!);
+            _panName = pickedPdf.names[0].toString();
+            panSource = 'offline';
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -1991,20 +2106,37 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   }
 
   //CHOOSE SELLER LETTER
-  void _chooseSellerLetter() async {
+  void _chooseSellerLetter(String source) async {
     try {
-      FilePickerResult? pickedSellerLetter =
-          await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _sellerLetter = File(pickedImage.path);
+            _sellerLetterName = pickedImage.name;
+            sellerLetterSource = 'offline';
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
 
-      if (pickedSellerLetter != null) {
-        setState(() {
-          _sellerLetter = File(pickedSellerLetter.files.single.path!);
-          _sellerLetterName = pickedSellerLetter.names[0].toString();
-          sellerLetterSource = 'offline';
-        });
+        if (pickedPdf != null) {
+          setState(() {
+            _sellerLetter = File(pickedPdf.files.single.path!);
+            _sellerLetterName = pickedPdf.names[0].toString();
+            sellerLetterSource = 'offline';
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -3273,7 +3405,9 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                     child: _photoName == null ||
                                             _photoName!.isEmpty
                                         ? InkWell(
-                                            onTap: _choosePhoto,
+                                            onTap: () {
+                                              chooseDocumentAlert('photo');
+                                            },
                                             child: Column(
                                               children: [
                                                 Image.asset(
@@ -3293,13 +3427,17 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                         : photoSource == 'offline'
                                             ? _photoName!.endsWith('.jpg') ||
                                                     _photoName!
-                                                        .endsWith('.jpeg')
+                                                        .endsWith('.jpeg') ||
+                                                    _photoName!.endsWith('.png')
                                                 ? Column(
                                                     children: [
                                                       Stack(
                                                         children: [
                                                           InkWell(
-                                                            onTap: _choosePhoto,
+                                                            onTap: () {
+                                                              chooseDocumentAlert(
+                                                                  'photo');
+                                                            },
                                                             child: Image.file(
                                                               _photo!,
                                                               height: 70,
@@ -3349,7 +3487,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                 : Column(
                                                     children: [
                                                       InkWell(
-                                                        onTap: _choosePhoto,
+                                                        onTap: () {
+                                                          chooseDocumentAlert(
+                                                              'photo');
+                                                        },
                                                         child: Image.asset(
                                                           'assets/images/pdf.png',
                                                           height: 70,
@@ -3449,7 +3590,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                           : 0),
                                                   photoSource == 'online'
                                                       ? InkWell(
-                                                          onTap: _choosePhoto,
+                                                          onTap: () {
+                                                            chooseDocumentAlert(
+                                                                'photo');
+                                                          },
                                                           child: Text(
                                                             'Upload',
                                                             overflow:
@@ -3487,7 +3631,9 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                     child: _aadhaarName == null ||
                                             _aadhaarName!.isEmpty
                                         ? InkWell(
-                                            onTap: _chooseAadhaar,
+                                            onTap: () {
+                                              chooseDocumentAlert('aadhaar');
+                                            },
                                             child: Column(
                                               children: [
                                                 Image.asset(
@@ -3507,14 +3653,18 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                         : aadhaarSource == 'offline'
                                             ? _aadhaarName!.endsWith('.jpg') ||
                                                     _aadhaarName!
-                                                        .endsWith('.jpeg')
+                                                        .endsWith('.jpeg') ||
+                                                    _aadhaarName!
+                                                        .endsWith('.png')
                                                 ? Column(
                                                     children: [
                                                       Stack(
                                                         children: [
                                                           InkWell(
-                                                            onTap:
-                                                                _chooseAadhaar,
+                                                            onTap: () {
+                                                              chooseDocumentAlert(
+                                                                  'aadhaar');
+                                                            },
                                                             child: Image.file(
                                                               _aadhaar!,
                                                               height: 70,
@@ -3565,7 +3715,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                 : Column(
                                                     children: [
                                                       InkWell(
-                                                        onTap: _choosePhoto,
+                                                        onTap: () {
+                                                          chooseDocumentAlert(
+                                                              'aadhaar');
+                                                        },
                                                         child: Image.asset(
                                                           'assets/images/pdf.png',
                                                           height: 70,
@@ -3604,7 +3757,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                   _aadhaarName!.endsWith(
                                                               '.jpg') ||
                                                           _aadhaarName!
-                                                              .endsWith('.jpeg')
+                                                              .endsWith(
+                                                                  '.jpeg') ||
+                                                          _aadhaarName!
+                                                              .endsWith('.png')
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
@@ -3665,7 +3821,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                               : 0),
                                                   aadhaarSource == 'online'
                                                       ? InkWell(
-                                                          onTap: _chooseAadhaar,
+                                                          onTap: () {
+                                                            chooseDocumentAlert(
+                                                                'aadhaar');
+                                                          },
                                                           child: Text(
                                                             'Upload',
                                                             overflow:
@@ -3702,7 +3861,9 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                     width: screenWidth * 0.2,
                                     child: _panName == null || _panName!.isEmpty
                                         ? InkWell(
-                                            onTap: _choosePan,
+                                            onTap: () {
+                                              chooseDocumentAlert('pan');
+                                            },
                                             child: Column(
                                               children: [
                                                 Image.asset(
@@ -3721,13 +3882,18 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                           )
                                         : panSource == 'offline'
                                             ? _panName!.endsWith('.jpg') ||
-                                                    _panName!.endsWith('.jpeg')
+                                                    _panName!
+                                                        .endsWith('.jpeg') ||
+                                                    _panName!.endsWith('.png')
                                                 ? Column(
                                                     children: [
                                                       Stack(
                                                         children: [
                                                           InkWell(
-                                                            onTap: _choosePan,
+                                                            onTap: () {
+                                                              chooseDocumentAlert(
+                                                                  'pan');
+                                                            },
                                                             child: Image.file(
                                                               _pan!,
                                                               height: 70,
@@ -3777,7 +3943,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                 : Column(
                                                     children: [
                                                       InkWell(
-                                                        onTap: _choosePan,
+                                                        onTap: () {
+                                                          chooseDocumentAlert(
+                                                              'pan');
+                                                        },
                                                         child: Image.asset(
                                                           'assets/images/pdf.png',
                                                           height: 70,
@@ -3813,8 +3982,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                             : Column(
                                                 children: [
                                                   _panName!.endsWith('.jpg') ||
+                                                          _panName!.endsWith(
+                                                              '.jpeg') ||
                                                           _panName!
-                                                              .endsWith('.jpeg')
+                                                              .endsWith('.png')
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
@@ -3874,7 +4045,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                           : 0),
                                                   panSource == 'online'
                                                       ? InkWell(
-                                                          onTap: _choosePan,
+                                                          onTap: () {
+                                                            chooseDocumentAlert(
+                                                                'pan');
+                                                          },
                                                           child: Text(
                                                             'Upload',
                                                             overflow:
@@ -3912,7 +4086,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                     child: _sellerLetterName == null ||
                                             _sellerLetterName!.isEmpty
                                         ? InkWell(
-                                            onTap: _chooseSellerLetter,
+                                            onTap: () {
+                                              chooseDocumentAlert(
+                                                  'sellerletter');
+                                            },
                                             child: Column(
                                               children: [
                                                 Image.asset(
@@ -3933,14 +4110,18 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                             ? _sellerLetterName!
                                                         .endsWith('.jpg') ||
                                                     _sellerLetterName!
-                                                        .endsWith('.jpeg')
+                                                        .endsWith('.jpeg') ||
+                                                    _sellerLetterName!
+                                                        .endsWith('.png')
                                                 ? Column(
                                                     children: [
                                                       Stack(
                                                         children: [
                                                           InkWell(
-                                                            onTap:
-                                                                _chooseSellerLetter,
+                                                            onTap: () {
+                                                              chooseDocumentAlert(
+                                                                  'sellerletter');
+                                                            },
                                                             child: Image.file(
                                                               _sellerLetter!,
                                                               height: 70,
@@ -3991,8 +4172,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                 : Column(
                                                     children: [
                                                       InkWell(
-                                                        onTap:
-                                                            _chooseSellerLetter,
+                                                        onTap: () {
+                                                          chooseDocumentAlert(
+                                                              'sellerletter');
+                                                        },
                                                         child: Image.asset(
                                                           'assets/images/pdf.png',
                                                           height: 70,
@@ -4031,7 +4214,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                   _sellerLetterName!.endsWith(
                                                               '.jpg') ||
                                                           _sellerLetterName!
-                                                              .endsWith('.jpeg')
+                                                              .endsWith(
+                                                                  '.jpeg') ||
+                                                          _sellerLetterName!
+                                                              .endsWith('.png')
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
@@ -4093,8 +4279,10 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                                               : 0),
                                                   sellerLetterSource == 'online'
                                                       ? InkWell(
-                                                          onTap:
-                                                              _chooseSellerLetter,
+                                                          onTap: () {
+                                                            chooseDocumentAlert(
+                                                                'sellerletter');
+                                                          },
                                                           child: Text(
                                                             'Upload',
                                                             overflow:

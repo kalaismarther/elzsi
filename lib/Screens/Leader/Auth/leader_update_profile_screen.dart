@@ -16,6 +16,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -151,19 +152,97 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
     return dateTime;
   }
 
-  //CHOOSE PHOTO
-  void _choosePhoto() async {
-    try {
-      FilePickerResult? pickedPhoto = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+  void chooseDocumentAlert(String type) {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          ListTile(
+            onTap: () {
+              if (type == 'photo') {
+                Nav().pop(context);
+                _choosePhoto('gallery');
+              } else if (type == 'aadhaar') {
+                Nav().pop(context);
+                _chooseAadhaar('gallery');
+              } else if (type == 'pan') {
+                Nav().pop(context);
+                _choosePan('gallery');
+              } else if (type == 'sellerletter') {
+                Nav().pop(context);
+                _chooseSellerLetter('gallery');
+              }
+            },
+            leading: const Icon(
+              Icons.image,
+              color: Colors.black,
+            ),
+            title: const Text(
+              'Choose Image',
+              style: TextStyle(color: Colors.black, fontSize: 14),
+            ),
+          ),
+          ListTile(
+            onTap: () {
+              if (type == 'photo') {
+                Nav().pop(context);
+                _choosePhoto('filemanager');
+              } else if (type == 'aadhaar') {
+                Nav().pop(context);
+                _chooseAadhaar('filemanager');
+              } else if (type == 'pan') {
+                Nav().pop(context);
+                _choosePan('filemanager');
+              } else if (type == 'sellerletter') {
+                Nav().pop(context);
+                _chooseSellerLetter('filemanager');
+              }
+            },
+            leading: const Icon(
+              Icons.sim_card_rounded,
+              color: Colors.black,
+            ),
+            title: const Text(
+              'Choose PDF',
+              style: TextStyle(color: Colors.black, fontSize: 14),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-      if (pickedPhoto != null) {
-        setState(() {
-          _photo = File(pickedPhoto.files.single.path!);
-          _photoName = pickedPhoto.names[0].toString();
-        });
+  //CHOOSE PHOTO
+  void _choosePhoto(String source) async {
+    try {
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _photo = File(pickedImage.path);
+            _photoName = pickedImage.name;
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+
+        if (pickedPdf != null) {
+          setState(() {
+            _photo = File(pickedPdf.files.single.path!);
+            _photoName = pickedPdf.names[0].toString();
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -175,18 +254,35 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
   }
 
   //CHOOSE AADHAAR
-  void _chooseAadhaar() async {
+  void _chooseAadhaar(String source) async {
     try {
-      FilePickerResult? pickedAadhaar = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _aadhaar = File(pickedImage.path);
+            _aadhaarName = pickedImage.name;
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
 
-      if (pickedAadhaar != null) {
-        setState(() {
-          _aadhaar = File(pickedAadhaar.files.single.path!);
-          _aadhaarName = pickedAadhaar.names[0].toString();
-        });
+        if (pickedPdf != null) {
+          setState(() {
+            _aadhaar = File(pickedPdf.files.single.path!);
+            _aadhaarName = pickedPdf.names[0].toString();
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -198,18 +294,35 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
   }
 
   //CHOOSE PAN
-  void _choosePan() async {
+  void _choosePan(String source) async {
     try {
-      FilePickerResult? pickedPan = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _pan = File(pickedImage.path);
+            _panName = pickedImage.name;
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
 
-      if (pickedPan != null) {
-        setState(() {
-          _pan = File(pickedPan.files.single.path!);
-          _panName = pickedPan.names[0].toString();
-        });
+        if (pickedPdf != null) {
+          setState(() {
+            _pan = File(pickedPdf.files.single.path!);
+            _panName = pickedPdf.names[0].toString();
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -221,19 +334,35 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
   }
 
   //CHOOSE SELLER LETTER
-  void _chooseSellerLetter() async {
+  void _chooseSellerLetter(String source) async {
     try {
-      FilePickerResult? pickedSellerLetter =
-          await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'pdf'],
-      );
+      if (source == 'gallery') {
+        final pickedImage =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (pickedImage != null) {
+          if (!pickedImage.name.endsWith('jpg') ||
+              !pickedImage.name.endsWith('jpeg') ||
+              !pickedImage.name.endsWith('png')) {
+            Common().showToast('Unsupported Format');
+            return;
+          }
+          setState(() {
+            _sellerLetter = File(pickedImage.path);
+            _sellerLetterName = pickedImage.name;
+          });
+        }
+      } else {
+        FilePickerResult? pickedPdf = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
 
-      if (pickedSellerLetter != null) {
-        setState(() {
-          _sellerLetter = File(pickedSellerLetter.files.single.path!);
-          _sellerLetterName = pickedSellerLetter.names[0].toString();
-        });
+        if (pickedPdf != null) {
+          setState(() {
+            _sellerLetter = File(pickedPdf.files.single.path!);
+            _sellerLetterName = pickedPdf.names[0].toString();
+          });
+        }
       }
     } catch (e) {
       if (!context.mounted) {
@@ -904,12 +1033,15 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                           SizedBox(
                             width: screenWidth * 0.2,
                             child: InkWell(
-                              onTap: _choosePhoto,
+                              onTap: () {
+                                chooseDocumentAlert('photo');
+                              },
                               child: Column(
                                 children: [
                                   _photo != null && _photoName != null
                                       ? _photoName!.endsWith('.jpg') ||
-                                              _photoName!.endsWith('.jpeg')
+                                              _photoName!.endsWith('.jpeg') ||
+                                              _photoName!.endsWith('.png')
                                           ? Stack(
                                               children: [
                                                 Image.file(
@@ -959,12 +1091,15 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                           SizedBox(
                             width: screenWidth * 0.2,
                             child: InkWell(
-                              onTap: _chooseAadhaar,
+                              onTap: () {
+                                chooseDocumentAlert('aadhaar');
+                              },
                               child: Column(
                                 children: [
                                   _aadhaar != null && _aadhaarName != null
                                       ? _aadhaarName!.endsWith('.jpg') ||
-                                              _aadhaarName!.endsWith('.jpeg')
+                                              _aadhaarName!.endsWith('.jpeg') ||
+                                              _aadhaarName!.endsWith('.png')
                                           ? Stack(
                                               children: [
                                                 Image.file(
@@ -1014,12 +1149,15 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                           SizedBox(
                             width: screenWidth * 0.2,
                             child: InkWell(
-                              onTap: _choosePan,
+                              onTap: () {
+                                chooseDocumentAlert('pan');
+                              },
                               child: Column(
                                 children: [
                                   _pan != null && _panName != null
                                       ? _panName!.endsWith('.jpg') ||
-                                              _panName!.endsWith('.jpeg')
+                                              _panName!.endsWith('.jpeg') ||
+                                              _panName!.endsWith('.png')
                                           ? Stack(
                                               children: [
                                                 Image.file(
@@ -1069,14 +1207,18 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                           SizedBox(
                             width: screenWidth * 0.2,
                             child: InkWell(
-                              onTap: _chooseSellerLetter,
+                              onTap: () {
+                                chooseDocumentAlert('sellerletter');
+                              },
                               child: Column(
                                 children: [
                                   _sellerLetter != null &&
                                           _sellerLetterName != null
                                       ? _sellerLetterName!.endsWith('.jpg') ||
                                               _sellerLetterName!
-                                                  .endsWith('.jpeg')
+                                                  .endsWith('.jpeg') ||
+                                              _sellerLetterName!
+                                                  .endsWith('.png')
                                           ? Stack(
                                               children: [
                                                 Image.file(
