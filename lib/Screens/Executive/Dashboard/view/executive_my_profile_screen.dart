@@ -1779,6 +1779,9 @@ import 'package:elzsi/Utils/regex.dart';
 import 'package:elzsi/Widgets/common_modal.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/rendering.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_image_compress/flutter_image_compress.dart';
+// import 'package:heif_converter/heif_converter.dart';
 import 'package:http/http.dart' as http;
 import 'package:elzsi/Utils/colors.dart';
 import 'package:elzsi/Utils/horizontalspace.dart';
@@ -1789,6 +1792,7 @@ import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:image/image.dart' as img;
 
 class ExecutiveMyProfileScreen extends StatefulWidget {
   const ExecutiveMyProfileScreen({super.key});
@@ -1831,6 +1835,17 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
   final _areaController = TextEditingController();
   final _pincodeController = TextEditingController();
   final _yearsOfExperienceController = TextEditingController();
+
+  DateTime? selectedDOB(String date) {
+    try {
+      DateTime givenDate = DateFormat('dd-MM-yyyy').parse(date);
+      String formatChangedDate = DateFormat('yyyy-MM-dd').format(givenDate);
+      DateTime dob = DateTime.parse(formatChangedDate);
+      return dob;
+    } catch (e) {
+      return null;
+    }
+  }
 
   //FOCUS NODES
   final _nameFocus = FocusNode();
@@ -2005,6 +2020,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
     final pickedDate = await showDatePicker(
       context: context,
       firstDate: DateTime(1900),
+      initialDate: selectedDOB(_dobController.text),
       lastDate: DateTime(
           DateTime.now().year - 18, DateTime.now().month, DateTime.now().day),
     );
@@ -4459,7 +4475,7 @@ class _ExecutiveMyProfileScreenState extends State<ExecutiveMyProfileScreen> {
                                       : workingType < 1 || workingType > 4
                                           ? () {
                                               Common().showToast(
-                                                  'Please work position');
+                                                  'Please select work position');
                                             }
                                           : _updateProfile,
                                   icon: isLoading

@@ -16,7 +16,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  // await Upgrader.clearSavedSettings();
+  await Upgrader.clearSavedSettings();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -75,15 +75,16 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: UpgradeAlert(
-        dialogStyle: UpgradeDialogStyle.cupertino,
-        showIgnore: false,
-        showLater: false,
-        showReleaseNotes: false,
-        cupertinoButtonTextStyle: const TextStyle(color: Colors.blue),
-        upgrader: Upgrader(debugLogging: true),
-        child: const SplashScreen(),
-      ),
+      home: const SplashScreen(),
+      // home: UpgradeAlert(
+      //   dialogStyle: UpgradeDialogStyle.cupertino,
+      //   showIgnore: false,
+      //   showLater: false,
+      //   showReleaseNotes: false,
+      //   cupertinoButtonTextStyle: const TextStyle(color: Colors.blue),
+      //   upgrader: Upgrader(debugLogging: true),
+      //   child: const SplashScreen(),
+      // ),
     );
   }
 }

@@ -130,6 +130,17 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
 
   List existingControllers = [];
 
+  DateTime? selectedDOB(String date) {
+    try {
+      DateTime givenDate = DateFormat('dd-MM-yyyy').parse(date);
+      String formatChangedDate = DateFormat('yyyy-MM-dd').format(givenDate);
+      DateTime dob = DateTime.parse(formatChangedDate);
+      return dob;
+    } catch (e) {
+      return null;
+    }
+  }
+
   DateTime _startingYear(String date) {
     DateTime dateTime = DateTime.parse("$date-01");
     print(dateTime);
@@ -238,6 +249,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
     final pickedDate = await showDatePicker(
       context: context,
       firstDate: DateTime(1900),
+      initialDate: selectedDOB(_dobController.text),
       lastDate: DateTime(
           DateTime.now().year - 18, DateTime.now().month, DateTime.now().day),
     );
@@ -2641,7 +2653,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                       : workingType != 5 && workingType != 6
                                           ? () {
                                               Common().showToast(
-                                                  'Please work position');
+                                                  'Please select work position');
                                             }
                                           : _updateProfile,
                                   icon: isLoading
