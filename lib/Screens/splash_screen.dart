@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final status = await newVersion.getVersionStatus();
 
     try {
-      if (status != null && !status.canUpdate) {
+      if (status != null && status.canUpdate) {
         showDialog(
             barrierColor: Colors.black12,
             barrierDismissible: false,
@@ -103,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen> {
           leaderLogin = pref.getBool('leaderLogin');
         });
 
-        Future.delayed(const Duration(milliseconds: 400), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           Nav().replace(
               context,
               alreadyLoggedIn == true && executiveLogin == true

@@ -236,13 +236,13 @@ class _LeaderHomeScreenState extends State<LeaderHomeScreen> {
   }
 
   //FOR RELOADING HOME CONTENT
-  void _reload() {
+  void _reload() async {
     setState(() {
       recentProperties.clear();
       isLoading = true;
     });
-    _homeContent();
-    _notify();
+    await _homeContent();
+    await _notify();
   }
 
   //LOGOUT

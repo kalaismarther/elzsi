@@ -195,7 +195,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
               }
             },
             leading: const Icon(
-              Icons.sim_card_rounded,
+              Icons.picture_as_pdf,
               color: Colors.black,
             ),
             title: const Text(
@@ -215,12 +215,12 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _photo = File(pickedImage.path);
             _photoName = pickedImage.name;
@@ -257,12 +257,12 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _aadhaar = File(pickedImage.path);
             _aadhaarName = pickedImage.name;
@@ -299,12 +299,12 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _pan = File(pickedImage.path);
             _panName = pickedImage.name;
@@ -341,12 +341,12 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _sellerLetter = File(pickedImage.path);
             _sellerLetterName = pickedImage.name;
@@ -830,7 +830,14 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(5),
                     decoration: const BoxDecoration(
-                        color: Colors.white, shape: BoxShape.circle),
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey,
+                              spreadRadius: 1,
+                              blurRadius: 1)
+                        ]),
                     child: const Icon(
                       Icons.close,
                       color: Colors.black,
@@ -1029,12 +1036,6 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                           height: 110, width: 110)
                                       : Stack(
                                           children: [
-                                            // CircleAvatar(
-                                            //   radius: 53,
-                                            //   foregroundImage: NetworkImage(
-                                            //     profileInfo!['is_profile_image'],
-                                            //   ),
-                                            // ),
                                             CachedNetworkImage(
                                               imageUrl: profileInfo![
                                                   'is_profile_image'],
@@ -1051,6 +1052,14 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                   image: DecorationImage(
                                                       image: imageProvider,
                                                       fit: BoxFit.cover),
+                                                ),
+                                              ),
+                                              errorWidget: (context, error,
+                                                      stackTrace) =>
+                                                  const SizedBox(
+                                                height: 70,
+                                                child: Icon(
+                                                  Icons.image_not_supported,
                                                 ),
                                               ),
                                             ),
@@ -1603,10 +1612,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                             ),
                                           )
                                         : photoSource == 'offline'
-                                            ? _photoName!.endsWith('.jpg') ||
-                                                    _photoName!
-                                                        .endsWith('.jpeg') ||
-                                                    _photoName!.endsWith('.png')
+                                            ? !_photoName!.endsWith('.pdf')
                                                 ? Column(
                                                     children: [
                                                       Stack(
@@ -1621,6 +1627,16 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                               height: 70,
                                                               width: 70,
                                                               fit: BoxFit.cover,
+                                                              errorBuilder: (context,
+                                                                      error,
+                                                                      stackTrace) =>
+                                                                  const SizedBox(
+                                                                height: 70,
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .image_not_supported,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           const Positioned(
@@ -1703,12 +1719,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                   )
                                             : Column(
                                                 children: [
-                                                  _photoName!.endsWith(
-                                                              '.jpg') ||
-                                                          _photoName!.endsWith(
-                                                              '.jpeg') ||
-                                                          _photoName!
-                                                              .endsWith('.png')
+                                                  !_photoName!.endsWith('.pdf')
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
@@ -1726,8 +1737,13 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                                 errorBuilder: (context,
                                                                         error,
                                                                         stackTrace) =>
-                                                                    const Icon(Icons
-                                                                        .image_not_supported),
+                                                                    const SizedBox(
+                                                                  height: 70,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .image_not_supported,
+                                                                  ),
+                                                                ),
                                                               ),
                                                               const Positioned(
                                                                 right: 2,
@@ -1829,11 +1845,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                             ),
                                           )
                                         : aadhaarSource == 'offline'
-                                            ? _aadhaarName!.endsWith('.jpg') ||
-                                                    _aadhaarName!
-                                                        .endsWith('.jpeg') ||
-                                                    _aadhaarName!
-                                                        .endsWith('.png')
+                                            ? !_aadhaarName!.endsWith('.pdf')
                                                 ? Column(
                                                     children: [
                                                       Stack(
@@ -1848,6 +1860,16 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                               height: 70,
                                                               width: 70,
                                                               fit: BoxFit.cover,
+                                                              errorBuilder: (context,
+                                                                      error,
+                                                                      stackTrace) =>
+                                                                  const SizedBox(
+                                                                height: 70,
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .image_not_supported,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           const Positioned(
@@ -1932,13 +1954,8 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                   )
                                             : Column(
                                                 children: [
-                                                  _aadhaarName!.endsWith(
-                                                              '.jpg') ||
-                                                          _aadhaarName!
-                                                              .endsWith(
-                                                                  '.jpeg') ||
-                                                          _aadhaarName!
-                                                              .endsWith('.png')
+                                                  !_aadhaarName!
+                                                          .endsWith('.pdf')
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
@@ -2059,10 +2076,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                             ),
                                           )
                                         : panSource == 'offline'
-                                            ? _panName!.endsWith('.jpg') ||
-                                                    _panName!
-                                                        .endsWith('.jpeg') ||
-                                                    _panName!.endsWith('.png')
+                                            ? !_panName!.endsWith('.pdf')
                                                 ? Column(
                                                     children: [
                                                       Stack(
@@ -2077,6 +2091,16 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                               height: 70,
                                                               width: 70,
                                                               fit: BoxFit.cover,
+                                                              errorBuilder: (context,
+                                                                      error,
+                                                                      stackTrace) =>
+                                                                  const SizedBox(
+                                                                height: 70,
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .image_not_supported,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           const Positioned(
@@ -2159,11 +2183,7 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                   )
                                             : Column(
                                                 children: [
-                                                  _panName!.endsWith('.jpg') ||
-                                                          _panName!.endsWith(
-                                                              '.jpeg') ||
-                                                          _panName!
-                                                              .endsWith('.png')
+                                                  !_panName!.endsWith('.pdf')
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(
@@ -2285,12 +2305,8 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                             ),
                                           )
                                         : sellerLetterSource == 'offline'
-                                            ? _sellerLetterName!
-                                                        .endsWith('.jpg') ||
-                                                    _sellerLetterName!
-                                                        .endsWith('.jpeg') ||
-                                                    _sellerLetterName!
-                                                        .endsWith('.png')
+                                            ? !_sellerLetterName!
+                                                    .endsWith('.pdf')
                                                 ? Column(
                                                     children: [
                                                       Stack(
@@ -2305,6 +2321,16 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                               height: 70,
                                                               width: 70,
                                                               fit: BoxFit.cover,
+                                                              errorBuilder: (context,
+                                                                      error,
+                                                                      stackTrace) =>
+                                                                  const SizedBox(
+                                                                height: 70,
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .image_not_supported,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           const Positioned(
@@ -2389,13 +2415,8 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
                                                   )
                                             : Column(
                                                 children: [
-                                                  _sellerLetterName!.endsWith(
-                                                              '.jpg') ||
-                                                          _sellerLetterName!
-                                                              .endsWith(
-                                                                  '.jpeg') ||
-                                                          _sellerLetterName!
-                                                              .endsWith('.png')
+                                                  !_sellerLetterName!
+                                                          .endsWith('.pdf')
                                                       ? InkWell(
                                                           onTap: () {
                                                             _showImagePreview(

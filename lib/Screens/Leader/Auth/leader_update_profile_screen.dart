@@ -220,12 +220,12 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _photo = File(pickedImage.path);
             _photoName = pickedImage.name;
@@ -260,12 +260,12 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _aadhaar = File(pickedImage.path);
             _aadhaarName = pickedImage.name;
@@ -300,12 +300,12 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _pan = File(pickedImage.path);
             _panName = pickedImage.name;
@@ -340,12 +340,12 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
         final pickedImage =
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (pickedImage != null) {
-          if (!pickedImage.name.endsWith('jpg') ||
-              !pickedImage.name.endsWith('jpeg') ||
-              !pickedImage.name.endsWith('png')) {
-            Common().showToast('Unsupported Format');
-            return;
-          }
+          // if (!pickedImage.name.endsWith('jpg') ||
+          //     !pickedImage.name.endsWith('jpeg') ||
+          //     !pickedImage.name.endsWith('png')) {
+          //   Common().showToast('Unsupported Format');
+          //   return;
+          // }
           setState(() {
             _sellerLetter = File(pickedImage.path);
             _sellerLetterName = pickedImage.name;
@@ -1039,9 +1039,7 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                               child: Column(
                                 children: [
                                   _photo != null && _photoName != null
-                                      ? _photoName!.endsWith('.jpg') ||
-                                              _photoName!.endsWith('.jpeg') ||
-                                              _photoName!.endsWith('.png')
+                                      ? !_photoName!.endsWith('.pdf')
                                           ? Stack(
                                               children: [
                                                 Image.file(
@@ -1049,6 +1047,14 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                                                   height: 70,
                                                   width: 70,
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      const SizedBox(
+                                                    height: 70,
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                    ),
+                                                  ),
                                                 ),
                                                 const Positioned(
                                                   right: 2,
@@ -1097,9 +1103,7 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                               child: Column(
                                 children: [
                                   _aadhaar != null && _aadhaarName != null
-                                      ? _aadhaarName!.endsWith('.jpg') ||
-                                              _aadhaarName!.endsWith('.jpeg') ||
-                                              _aadhaarName!.endsWith('.png')
+                                      ? !_aadhaarName!.endsWith('.pdf')
                                           ? Stack(
                                               children: [
                                                 Image.file(
@@ -1107,6 +1111,14 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                                                   height: 70,
                                                   width: 70,
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      const SizedBox(
+                                                    height: 70,
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                    ),
+                                                  ),
                                                 ),
                                                 const Positioned(
                                                   right: 2,
@@ -1155,9 +1167,7 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                               child: Column(
                                 children: [
                                   _pan != null && _panName != null
-                                      ? _panName!.endsWith('.jpg') ||
-                                              _panName!.endsWith('.jpeg') ||
-                                              _panName!.endsWith('.png')
+                                      ? !_panName!.endsWith('.pdf')
                                           ? Stack(
                                               children: [
                                                 Image.file(
@@ -1165,6 +1175,14 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                                                   height: 70,
                                                   width: 70,
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      const SizedBox(
+                                                    height: 70,
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                    ),
+                                                  ),
                                                 ),
                                                 const Positioned(
                                                   right: 2,
@@ -1214,11 +1232,7 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                                 children: [
                                   _sellerLetter != null &&
                                           _sellerLetterName != null
-                                      ? _sellerLetterName!.endsWith('.jpg') ||
-                                              _sellerLetterName!
-                                                  .endsWith('.jpeg') ||
-                                              _sellerLetterName!
-                                                  .endsWith('.png')
+                                      ? !_sellerLetterName!.endsWith('.pdf')
                                           ? Stack(
                                               children: [
                                                 Image.file(
@@ -1226,6 +1240,14 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
                                                   height: 70,
                                                   width: 70,
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      const SizedBox(
+                                                    height: 70,
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                    ),
+                                                  ),
                                                 ),
                                                 const Positioned(
                                                   right: 2,
