@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     try {
       if (status != null) {
-        if (!status.canUpdate) {
+        if (status.canUpdate) {
           showDialog(
               barrierColor: Colors.black12,
               barrierDismissible: false,
