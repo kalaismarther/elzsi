@@ -204,7 +204,7 @@ class _LeaderUpdateProfileScreenState extends State<LeaderUpdateProfileScreen> {
               }
             },
             leading: const Icon(
-              Icons.sim_card_rounded,
+              Icons.picture_as_pdf,
               color: Colors.black,
             ),
             title: const Text(
