@@ -73,9 +73,17 @@ class _LeaderViewDetailsScreenState extends State<LeaderViewDetailsScreen> {
     if (result['status'].toString() == '1') {
       setState(() {
         linkedSellerProjects.addAll(result?['data']?['projects'] ?? []);
+        paginationLoader = false;
       });
     } else if (result['status'].toString() == '3') {
+      setState(() {
+        paginationLoader = false;
+      });
       throw Exception('Device changed');
+    } else {
+      setState(() {
+        paginationLoader = false;
+      });
     }
   }
 
