@@ -349,273 +349,276 @@ class _ExecutiveHomeScreenState extends State<ExecutiveHomeScreen> {
             backgroundColor: primaryColor,
             child: Container(
               padding: const EdgeInsets.only(top: 60),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
+                      ),
+                      child: ListTile(
+                        splashColor: Colors.transparent,
+                        onTap: () async {
+                          Nav().pop(context);
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutiveSelectSellerScreen()));
+                          _reload();
+                        },
+                        leading: Image.asset(
+                          'assets/images/menu-select-seller.png',
+                          height: 24,
+                        ),
+                        title: const Text(
+                          'Select Seller',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                    child: ListTile(
-                      splashColor: Colors.transparent,
-                      onTap: () async {
-                        Nav().pop(context);
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ExecutiveSelectSellerScreen()));
-                        _reload();
-                      },
-                      leading: Image.asset(
-                        'assets/images/menu-select-seller.png',
-                        height: 24,
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
                       ),
-                      title: const Text(
-                        'Select Seller',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
-                      ),
-                    ),
-                    child: ListTile(
-                      splashColor: Colors.transparent,
-                      onTap: () async {
-                        Nav().pop(context);
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ExecutiveMySellerScreen()));
+                      child: ListTile(
+                        splashColor: Colors.transparent,
+                        onTap: () async {
+                          Nav().pop(context);
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutiveMySellerScreen()));
 
-                        _reload();
-                      },
-                      leading: Image.asset(
-                        'assets/images/menu-my-seller.png',
-                        height: 24,
-                      ),
-                      title: const Text(
-                        'My Sellers',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
+                          _reload();
+                        },
+                        leading: Image.asset(
+                          'assets/images/menu-my-seller.png',
+                          height: 24,
+                        ),
+                        title: const Text(
+                          'My Sellers',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                    child: ListTile(
-                      splashColor: Colors.transparent,
-                      onTap: () async {
-                        Nav().pop(context);
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ExecutivePropertiesScreen()));
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
+                      ),
+                      child: ListTile(
+                        splashColor: Colors.transparent,
+                        onTap: () async {
+                          Nav().pop(context);
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutivePropertiesScreen()));
 
-                        _reload();
-                      },
-                      leading: Image.asset(
-                        'assets/images/menu-properties.png',
-                        height: 24,
-                      ),
-                      title: const Text(
-                        'Properties',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
+                          _reload();
+                        },
+                        leading: Image.asset(
+                          'assets/images/menu-properties.png',
+                          height: 24,
+                        ),
+                        title: const Text(
+                          'Properties',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                    child: ListTile(
-                      splashColor: Colors.transparent,
-                      onTap: () async {
-                        Nav().pop(context);
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ExecutiveMyProfileScreen()));
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
+                      ),
+                      child: ListTile(
+                        splashColor: Colors.transparent,
+                        onTap: () async {
+                          Nav().pop(context);
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExecutiveMyProfileScreen()));
 
-                        _reload();
-                      },
-                      leading: Image.asset(
-                        'assets/images/menu-profile.png',
-                        height: 24,
-                      ),
-                      title: const Text(
-                        'Profile',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
+                          _reload();
+                        },
+                        leading: Image.asset(
+                          'assets/images/menu-profile.png',
+                          height: 24,
+                        ),
+                        title: const Text(
+                          'Profile',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                    child: ListTile(
-                      onTap: () {
-                        Nav().pop(context);
-                        Nav().push(context, const TermsAndConditionsScreen());
-                      },
-                      leading: Image.asset(
-                        'assets/images/terms-and-conditions.png',
-                        height: 24,
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
                       ),
-                      title: const Text(
-                        'Terms and Conditions',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
-                      ),
-                    ),
-                    child: ListTile(
-                      onTap: () {
-                        Share.share(
-                            'Check out Elzsi Task Manager App on Play Store : https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
-                      },
-                      leading: Image.asset(
-                        'assets/images/share.png',
-                        height: 23,
-                      ),
-                      title: const Text(
-                        'Share',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
+                      child: ListTile(
+                        onTap: () {
+                          Nav().pop(context);
+                          Nav().push(context, const TermsAndConditionsScreen());
+                        },
+                        leading: Image.asset(
+                          'assets/images/terms-and-conditions.png',
+                          height: 24,
+                        ),
+                        title: const Text(
+                          'Terms and Conditions',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
+                      ),
+                      child: ListTile(
+                        onTap: () {
+                          Share.share(
+                              'Check out Elzsi Task Manager App on Play Store : https://play.google.com/store/apps/details?id=com.smart.elzsimanager');
+                        },
+                        leading: Image.asset(
+                          'assets/images/share.png',
+                          height: 23,
+                        ),
+                        title: const Text(
+                          'Share',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                    child: ListTile(
-                      onTap: () {
-                        Nav().pop(context);
-                        Nav().push(context, const HelpAndSupportScreen());
-                      },
-                      leading: Image.asset(
-                        'assets/images/help.png',
-                        height: 24,
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
                       ),
-                      title: const Text(
-                        'Help & Contact Support',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
+                      child: ListTile(
+                        onTap: () {
+                          Nav().pop(context);
+                          Nav().push(context, const HelpAndSupportScreen());
+                        },
+                        leading: Image.asset(
+                          'assets/images/help.png',
+                          height: 24,
+                        ),
+                        title: const Text(
+                          'Help & Contact Support',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: BorderDirectional(
-                        bottom: BorderSide(color: Colors.white, width: 0.35),
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: BorderDirectional(
+                          bottom: BorderSide(color: Colors.white, width: 0.35),
+                        ),
                       ),
-                    ),
-                    child: ListTile(
-                      onTap: () {
-                        Nav().pop(context);
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: const Text('Do you want to Logout?'),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Nav().pop(context);
-                                  },
-                                  child: const Text('No')),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    showDialog(
-                                      barrierColor: Colors.black54,
-                                      context: context,
-                                      builder: (context) => PopScope(
-                                        canPop: false,
-                                        child: Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          shadowColor: Colors.transparent,
-                                          surfaceTintColor: Colors.transparent,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(0),
-                                          ),
-                                          child: const SpinKitCircle(
-                                            color: Colors.white,
+                      child: ListTile(
+                        onTap: () {
+                          Nav().pop(context);
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: const Text('Do you want to Logout?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Nav().pop(context);
+                                    },
+                                    child: const Text('No')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      showDialog(
+                                        barrierColor: Colors.black54,
+                                        context: context,
+                                        builder: (context) => PopScope(
+                                          canPop: false,
+                                          child: Dialog(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            surfaceTintColor:
+                                                Colors.transparent,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(0),
+                                            ),
+                                            child: const SpinKitCircle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                    _logout();
-                                  },
-                                  child: const Text('Yes'))
-                            ],
-                          ),
-                        );
-                      },
-                      leading: Image.asset(
-                        'assets/images/logout.png',
-                        height: 24,
-                      ),
-                      title: const Text(
-                        'Logout',
-                        style: TextStyle(color: Colors.white, fontSize: 13),
-                      ),
-                      trailing: Image.asset(
-                        'assets/images/next.png',
-                        height: 13,
+                                      );
+                                      _logout();
+                                    },
+                                    child: const Text('Yes'))
+                              ],
+                            ),
+                          );
+                        },
+                        leading: Image.asset(
+                          'assets/images/logout.png',
+                          height: 24,
+                        ),
+                        title: const Text(
+                          'Logout',
+                          style: TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                        trailing: Image.asset(
+                          'assets/images/next.png',
+                          height: 13,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
