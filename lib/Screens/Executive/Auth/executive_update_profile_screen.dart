@@ -149,9 +149,13 @@ class _ExecutiveUpdateProfileScreenState
     ]
   ];
 
-  DateTime _startingYear(String date) {
-    DateTime dateTime = DateTime.parse("$date-01");
-    return dateTime;
+  DateTime? _startingYear(String date) {
+    try {
+      DateTime dateTime = DateTime.parse("$date-01");
+      return dateTime;
+    } catch (e) {
+      return null;
+    }
   }
 
   void chooseDocumentAlert(String type) {
@@ -424,9 +428,13 @@ class _ExecutiveUpdateProfileScreenState
     if (date.isEmpty || date == '') {
       return '';
     }
-    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
-    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
-    return formattedDate;
+    try {
+      DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
   }
 
   void _updateProfile() async {

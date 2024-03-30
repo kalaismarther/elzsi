@@ -75,18 +75,26 @@ class _ExecutiveViewPropertyDetailScreenState
     if (date.isEmpty || date == '') {
       return '';
     }
-    DateTime inputDate = DateTime.parse(date);
-    String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
-    return formattedDate;
+    try {
+      DateTime inputDate = DateTime.parse(date);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
   }
 
   String _formatDate1(String date) {
     if (date.isEmpty || date == '') {
       return '';
     }
-    DateTime inputDate = DateFormat("dd MMM, yyyy").parse(date);
-    String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
-    return formattedDate;
+    try {
+      DateTime inputDate = DateFormat("dd MMM, yyyy").parse(date);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
   }
 
   //FUNCTION FOR GETTING PROPERTY DETAIL

@@ -98,9 +98,13 @@ class _ExecutiveNewEntryScreenState extends State<ExecutiveNewEntryScreen> {
     if (date.isEmpty || date == '') {
       return '';
     }
-    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
-    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
-    return formattedDate;
+    try {
+      DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
   }
 
   // void _addNewEntry() {

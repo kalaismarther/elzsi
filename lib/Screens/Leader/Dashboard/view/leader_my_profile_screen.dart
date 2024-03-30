@@ -141,10 +141,14 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
     }
   }
 
-  DateTime _startingYear(String date) {
-    DateTime dateTime = DateTime.parse("$date-01");
-    print(dateTime);
-    return dateTime;
+  DateTime? _startingYear(String date) {
+    try {
+      DateTime dateTime = DateTime.parse("$date-01");
+      print(dateTime);
+      return dateTime;
+    } catch (e) {
+      return null;
+    }
   }
 
   void chooseDocumentAlert(String type) {
@@ -397,18 +401,26 @@ class _LeaderMyProfileScreenState extends State<LeaderMyProfileScreen> {
     if (date.isEmpty || date == '') {
       return '';
     }
-    DateTime inputDate = DateTime.parse(date);
-    String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
-    return formattedDate;
+    try {
+      DateTime inputDate = DateTime.parse(date);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(inputDate);
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
   }
 
   String _formatDate1(String date) {
     if (date.isEmpty || date == '') {
       return '';
     }
-    DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
-    String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
-    return formattedDate;
+    try {
+      DateTime inputDate = DateFormat("dd-MM-yyyy").parse(date);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(inputDate);
+      return formattedDate;
+    } catch (e) {
+      return '';
+    }
   }
 
   void _addExistingSellerDetails() {
